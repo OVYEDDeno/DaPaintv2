@@ -5,13 +5,15 @@ import { Header } from "../components/Header";
 import { Hometokenno } from "../components/Hometokenno";
 import { Adstokenno } from "../components/Adstokenno";
 import { Adstoken } from "../components/Adstoken";
+import { Bg } from "../components/Bg"; // Make sure to import Bg component
 
 export const Home = () => {
   const navigate = useNavigate();
   const [showCard, setShowCard] = useState(true);
+  const [showHome, setShowHome] = useState(true);
   const [showAuth, setShowAuth] = useState(false);
   const [showAds, setShowAds] = useState(false);
-  const [isAuthenticated, setIsAuthenticated] = useState(true); // Changed to false initially
+  const [isAuthenticated, setIsAuthenticated] = useState(true);
   const [bearerToken, setBearerToken] = useState(null);
 
   // Check for existing token on component mount
@@ -20,12 +22,11 @@ export const Home = () => {
     if (token) {
       setBearerToken(token);
       setIsAuthenticated(true);
-      // Optional: verify token validity
       verifyToken(token);
     }
   }, []);
 
-  // Verify token validity (optional - you can add API call to verify)
+  // Verify token validity
   const verifyToken = async (token) => {
     try {
       const response = await fetch('/api/verify-token', {
@@ -39,7 +40,6 @@ export const Home = () => {
       if (response.ok) {
         return true;
       } else {
-        // Token is invalid, remove it
         localStorage.removeItem('bearerToken');
         setBearerToken(null);
         setIsAuthenticated(false);
@@ -47,7 +47,6 @@ export const Home = () => {
       }
     } catch (error) {
       console.error('Token verification error:', error);
-      // On error, assume token is invalid
       localStorage.removeItem('bearerToken');
       setBearerToken(null);
       setIsAuthenticated(false);
@@ -55,18 +54,22 @@ export const Home = () => {
     }
   };
 
-  const toggleCard = () => {
-    setShowCard(true);
-    setShowAds(false);
-  };
-
   const toggleAuth = () => {
     setShowAuth((prevState) => !prevState);
   };
 
+  const toggleHome = () => {
+    setShowHome(true);
+    setShowAds(false);
+  };
+
   const toggleAds = () => {
     setShowAds(true);
-    setShowCard(false);
+    setShowHome(false);
+  };
+
+  const toggleCard = () => {
+    setShowCard((prevState) => !prevState);
   };
 
   const handleAuthSuccess = (token) => {
@@ -76,10 +79,9 @@ export const Home = () => {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('bearerToken'); // Clear token from storage
+    localStorage.removeItem('bearerToken');
     setBearerToken(null);
     setIsAuthenticated(false);
-    // Optionally redirect to home or show a message
   };
 
   const handleNavigation = (path) => {
@@ -88,44 +90,54 @@ export const Home = () => {
 
   return (
     <>
+      {/* Background Component - Always render */}
+      <Bg showCard={showCard} />
+      
       <div className="scroll-container">
-        {/* Header Section */}
-        <Header 
-          showCard={showCard}
+        {/* Header Section - Always show */}
+        <Header
+          showHome={showHome}
           toggleCard={toggleCard}
+          toggleHome={toggleHome}
           toggleAds={toggleAds}
           toggleAuth={toggleAuth}
           isAuthenticated={isAuthenticated}
           onLogout={handleLogout}
+          showCard={showCard}
         />
 
-        {/* Auth */}
-        <Auth 
-          showAuth={showAuth}
-          toggleAuth={toggleAuth}
-          onAuthSuccess={handleAuthSuccess}
-        />
-
-        {/* Main Content */}
+        {/* Only show content when showCard is true */}
         {showCard && (
-          <Hometokenno 
-            toggleAuth={toggleAuth}
-            isAuthenticated={isAuthenticated}
-          />
-        )}
-
-        {/* Ads Content - Show Adstoken if authenticated, Adstokenno if not */}
-        {showAds && (
-          isAuthenticated ? (
-            <Adstoken 
-              bearerToken={bearerToken}
-              onLogout={handleLogout}
-            />
-          ) : (
-            <Adstokenno 
+          <div className="bg-white">
+            {/* Auth */}
+            <Auth
+              showAuth={showAuth}
               toggleAuth={toggleAuth}
+              onAuthSuccess={handleAuthSuccess}
             />
-          )
+
+            {/* Main Content */}
+            {showHome && (
+              <Hometokenno 
+                toggleAuth={toggleAuth}
+                isAuthenticated={isAuthenticated}
+              />
+            )}
+
+            {/* Ads Content */}        
+            {showAds && (
+              isAuthenticated ? (
+                <Adstoken
+                  bearerToken={bearerToken}
+                  onLogout={handleLogout}
+                />
+              ) : (
+                <Adstokenno
+                  toggleAuth={toggleAuth}
+                />
+              )
+            )}
+          </div>
         )}
       </div>
     </>

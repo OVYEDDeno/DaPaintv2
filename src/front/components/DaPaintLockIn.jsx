@@ -1,52 +1,47 @@
-import React, { useEffect } from "react"
-import rigoImageUrl from "../assets/img/rigo-baby.jpg";
-import useGlobalReducer from "../hooks/useGlobalReducer.jsx";
+import React from "react";
+const placeholderImage =
+    "https://icons.iconarchive.com/icons/microsoft/fluentui-emoji-3d/512/Man-3d-Medium-Dark-icon.png";
 
-export const Home = () => {
-
-	const { store, dispatch } = useGlobalReducer()
-
-	const loadMessage = async () => {
-		try {
-			const backendUrl = import.meta.env.VITE_BACKEND_URL
-
-			if (!backendUrl) throw new Error("VITE_BACKEND_URL is not defined in .env file")
-
-			const response = await fetch(backendUrl + "/api/hello")
-			const data = await response.json()
-
-			if (response.ok) dispatch({ type: "set_hello", payload: data.message })
-
-			return data
-
-		} catch (error) {
-			if (error.message) throw new Error(
-				`Could not fetch the message from the backend.
-				Please check if the backend is running and the backend port is public.`
-			);
-		}
-
-	}
-
-	useEffect(() => {
-		loadMessage()
-	}, [])
-
+export const DaPaintLockIn = () => {
 	return (
-		<div className="text-center mt-5">
-			<h1 className="display-4">Lock In DaPaint!!</h1>
-			<p className="lead">
-				<img src={rigoImageUrl} className="img-fluid rounded-circle mb-3" alt="Rigo Baby" />
-			</p>
-			<div className="alert alert-info">
-				{store.message ? (
-					<span>{store.message}</span>
-				) : (
-					<span className="text-danger">
-						Loading message from the backend (make sure your python 🐍 backend is running)...
-					</span>
-				)}
+		<div className="event-auto-scroll">
+			<div className="event-track">
+				{/* Placeholder events */}
+				{[1, 2, 3, 4, 5].map((_, index) => (
+					<div className="event-row" key={index}>
+						<div className="dapaint-container">
+							<div className="event-profile">
+								<div className="pill-container" type="button">
+									<img
+										src={placeholderImage}
+										alt="Host"
+										className="pill-image"
+									/>
+									<span className="pill-name">Host Player</span>
+								</div>
+								<div className="event-details">
+									<span className="event-style">2:30 PM</span>
+									<span className="event-style">Basketball</span>
+								</div>
+							</div>
+							<h6>VS</h6>
+							<div className="event-profile">
+								<div className="pill-container" type="button">
+									<img
+										src={placeholderImage}
+										alt="Foe"
+										className="pill-image"
+									/>
+									<span className="pill-name">Foe Player</span>
+								</div>
+								<div className="event-details">
+									<span className="event-location">Court 1</span>
+								</div>
+							</div>
+						</div>
+					</div>
+				))}
 			</div>
 		</div>
 	);
-}; 
+};

@@ -1,5 +1,6 @@
 import React from "react";
 import { Footer } from "./Footer";
+import { DaPaintLockIn } from "./DaPaintLockIn";
 
 export const Hometokenno = ({ toggleAuth, isAuthenticated }) => {
   return (
@@ -7,15 +8,15 @@ export const Hometokenno = ({ toggleAuth, isAuthenticated }) => {
       {/* Hero Section */}
       <section className="hero-section">
         <h1 className="heroh1 text-center" style={{ marginTop: "168px" }}>
-          {isAuthenticated 
-            ? "Welcome Back, Champion!" 
+          {isAuthenticated
+            ? "Welcome Back, Champion!"
             : "Winners Don't Just Play…They Profit!"
           }
         </h1>
 
         <div className="text-center" style={{ color: "#ffffff", fontSize: "17px" }}>
           <p className="mb-3">
-            {isAuthenticated 
+            {isAuthenticated
               ? "Ready to dominate the competition and earn your rewards?"
               : "Welcome to DaPaint.org—the FREE intuitive platform where players get paid what they're worth."
             }
@@ -31,14 +32,17 @@ export const Hometokenno = ({ toggleAuth, isAuthenticated }) => {
             </button>
           )}
           {isAuthenticated && (
-            <button
-              className="golden-button rounded-pill w-50 mt-2"
-              onClick={() => {/* Navigate to game */}}
-            >
-              <span className="golden-text" style={{ fontSize: "17px" }}>
-                Find Your Next Foe
-              </span>
-            </button>
+            <>
+              <button
+                className="golden-button rounded-pill w-50 mt-2"
+                onClick={() => {/* Navigate to game */ }}
+              >
+                <span className="golden-text" style={{ fontSize: "17px" }}>
+                  Create a DaPaint
+                </span>
+              </button>
+              <DaPaintLockIn />
+            </>
           )}
         </div>
       </section>
@@ -46,7 +50,7 @@ export const Hometokenno = ({ toggleAuth, isAuthenticated }) => {
       {/* About Section */}
       <section className="container text-black" style={{ marginTop: "168px" }}>
         <h2 className="text-black mb-4" style={{ textAlign: "justify" }}>
-          {isAuthenticated 
+          {isAuthenticated
             ? "Your Dashboard - Track Your Success"
             : "At DaPaint.org, we're reimagining the way people compete and connect through sports."
           }
@@ -75,11 +79,11 @@ export const Hometokenno = ({ toggleAuth, isAuthenticated }) => {
                 </div>
               </div>
             </div>
-            
+
             <div className="text-center">
               <button
                 className="golden-button rounded-pill w-50 mb-3"
-                onClick={() => {/* Navigate to games */}}
+                onClick={() => {/* Navigate to games */ }}
               >
                 <span className="golden-text" style={{ fontSize: "17px" }}>
                   Continue Playing
@@ -146,7 +150,6 @@ export const Hometokenno = ({ toggleAuth, isAuthenticated }) => {
           </div>
         )}
       </section>
-
       <Footer />
     </main>
   );
