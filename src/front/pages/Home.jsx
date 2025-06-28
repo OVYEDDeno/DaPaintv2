@@ -1,52 +1,133 @@
-import React, { useEffect } from "react"
-import rigoImageUrl from "../assets/img/rigo-baby.jpg";
-import useGlobalReducer from "../hooks/useGlobalReducer.jsx";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { Auth } from "../components/Auth";
+import { Header } from "../components/Header";
+import { Hometokenno } from "../components/Hometokenno";
+import { Adstokenno } from "../components/Adstokenno";
+import { Adstoken } from "../components/Adstoken";
 
 export const Home = () => {
+  const navigate = useNavigate();
+  const [showCard, setShowCard] = useState(true);
+  const [showAuth, setShowAuth] = useState(false);
+  const [showAds, setShowAds] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(true); // Changed to false initially
+  const [bearerToken, setBearerToken] = useState(null);
 
-	const { store, dispatch } = useGlobalReducer()
+  // Check for existing token on component mount
+  useEffect(() => {
+    const token = localStorage.getItem('bearerToken');
+    if (token) {
+      setBearerToken(token);
+      setIsAuthenticated(true);
+      // Optional: verify token validity
+      verifyToken(token);
+    }
+  }, []);
 
-	const loadMessage = async () => {
-		try {
-			const backendUrl = import.meta.env.VITE_BACKEND_URL
+  // Verify token validity (optional - you can add API call to verify)
+  const verifyToken = async (token) => {
+    try {
+      const response = await fetch('/api/verify-token', {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
 
-			if (!backendUrl) throw new Error("VITE_BACKEND_URL is not defined in .env file")
+      if (response.ok) {
+        return true;
+      } else {
+        // Token is invalid, remove it
+        localStorage.removeItem('bearerToken');
+        setBearerToken(null);
+        setIsAuthenticated(false);
+        return false;
+      }
+    } catch (error) {
+      console.error('Token verification error:', error);
+      // On error, assume token is invalid
+      localStorage.removeItem('bearerToken');
+      setBearerToken(null);
+      setIsAuthenticated(false);
+      return false;
+    }
+  };
 
-			const response = await fetch(backendUrl + "/api/hello")
-			const data = await response.json()
+  const toggleCard = () => {
+    setShowCard(true);
+    setShowAds(false);
+  };
 
-			if (response.ok) dispatch({ type: "set_hello", payload: data.message })
+  const toggleAuth = () => {
+    setShowAuth((prevState) => !prevState);
+  };
 
-			return data
+  const toggleAds = () => {
+    setShowAds(true);
+    setShowCard(false);
+  };
 
-		} catch (error) {
-			if (error.message) throw new Error(
-				`Could not fetch the message from the backend.
-				Please check if the backend is running and the backend port is public.`
-			);
-		}
+  const handleAuthSuccess = (token) => {
+    setBearerToken(token);
+    setIsAuthenticated(true);
+    setShowAuth(false);
+  };
 
-	}
+  const handleLogout = () => {
+    localStorage.removeItem('bearerToken'); // Clear token from storage
+    setBearerToken(null);
+    setIsAuthenticated(false);
+    // Optionally redirect to home or show a message
+  };
 
-	useEffect(() => {
-		loadMessage()
-	}, [])
+  const handleNavigation = (path) => {
+    navigate(path);
+  };
 
-	return (
-		<div className="text-center mt-5">
-			<h1 className="display-4">Hello Rigo!!</h1>
-			<p className="lead">
-				<img src={rigoImageUrl} className="img-fluid rounded-circle mb-3" alt="Rigo Baby" />
-			</p>
-			<div className="alert alert-info">
-				{store.message ? (
-					<span>{store.message}</span>
-				) : (
-					<span className="text-danger">
-						Loading message from the backend (make sure your python 🐍 backend is running)...
-					</span>
-				)}
-			</div>
-		</div>
-	);
-}; 
+  return (
+    <>
+      <div className="scroll-container">
+        {/* Header Section */}
+        <Header 
+          showCard={showCard}
+          toggleCard={toggleCard}
+          toggleAds={toggleAds}
+          toggleAuth={toggleAuth}
+          isAuthenticated={isAuthenticated}
+          onLogout={handleLogout}
+        />
+
+        {/* Auth */}
+        <Auth 
+          showAuth={showAuth}
+          toggleAuth={toggleAuth}
+          onAuthSuccess={handleAuthSuccess}
+        />
+
+        {/* Main Content */}
+        {showCard && (
+          <Hometokenno 
+            toggleAuth={toggleAuth}
+            isAuthenticated={isAuthenticated}
+          />
+        )}
+
+        {/* Ads Content - Show Adstoken if authenticated, Adstokenno if not */}
+        {showAds && (
+          isAuthenticated ? (
+            <Adstoken 
+              bearerToken={bearerToken}
+              onLogout={handleLogout}
+            />
+          ) : (
+            <Adstokenno 
+              toggleAuth={toggleAuth}
+            />
+          )
+        )}
+      </div>
+    </>
+  );
+};
