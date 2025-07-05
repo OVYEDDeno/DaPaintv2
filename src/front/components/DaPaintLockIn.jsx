@@ -5,9 +5,9 @@ const placeholderImage =
 export const DaPaintLockIn = () => {
 	return (
 		<div className="event-auto-scroll">
-			<div className="event-track">
+			{/* <div className="event-track">
 				{/* Placeholder events */}
-				{[1, 2, 3, 4, 5].map((_, index) => (
+				{/*{[1, 2, 3, 4, 5].map((_, index) => (
 					<div className="event-row" key={index}>
 						<div className="dapaint-container">
 							<div className="event-profile">
@@ -41,7 +41,7 @@ export const DaPaintLockIn = () => {
 						</div>
 					</div>
 				))}
-			</div>
+			</div> */}
 		</div>
 	);
 };
