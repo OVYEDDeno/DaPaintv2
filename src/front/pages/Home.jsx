@@ -2,12 +2,12 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Auth } from "../components/Auth";
 import { DaPaintCreate } from "../components/DaPaintCreate";
+import { MatchInterface } from "../components/MatchInterface";
 import { Header } from "../components/Header";
 import { Hometokenno } from "../components/Hometokenno";
 import { Adstokenno } from "../components/Adstokenno";
 import { Adstoken } from "../components/Adstoken";
 import { Bg } from "../components/Bg"; // Make sure to import Bg component
-
 
 export const Home = () => {
   const navigate = useNavigate();
@@ -15,9 +15,11 @@ export const Home = () => {
   const [showHome, setShowHome] = useState(true);
   const [showAuth, setShowAuth] = useState(false);
   const [showDaPaintCreate, setShowDaPaintCreate] = useState(false);
+  const [showMatchInterface, setShowMatchInterface] = useState(false);
   const [showAds, setShowAds] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(true);
   const [bearerToken, setBearerToken] = useState(null);
+  const [currentWinStreak, setCurrentWinStreak] = useState(7);
 
   // Check for existing token on component mount
   useEffect(() => {
@@ -65,6 +67,10 @@ export const Home = () => {
     setShowDaPaintCreate((prevState) => !prevState);
   };
 
+  const toggleMatchInterface = () => {
+    setShowMatchInterface((prevState) => !prevState);
+  };
+
   const toggleHome = () => {
     setShowHome(true);
     setShowAds(false);
@@ -91,6 +97,16 @@ export const Home = () => {
     setShowDaPaintCreate(false);
   };
 
+  const handleMatchComplete = (matchResult) => {
+    console.log('Match completed:', matchResult);
+    // Update win streak based on result
+    if (matchResult.winner === 'host') {
+      setCurrentWinStreak(prev => prev + 1);
+    } else {
+      setCurrentWinStreak(0); // Reset streak if lost
+    }
+  };
+
   const handleLogout = () => {
     localStorage.removeItem('bearerToken');
     setBearerToken(null);
@@ -99,6 +115,10 @@ export const Home = () => {
 
   const handleNavigation = (path) => {
     navigate(path);
+  };
+
+  const handleWinStreakChange = (newStreak) => {
+    setCurrentWinStreak(newStreak);
   };
 
   return (
@@ -117,6 +137,8 @@ export const Home = () => {
           isAuthenticated={isAuthenticated}
           onLogout={handleLogout}
           showCard={showCard}
+          currentWinStreak={currentWinStreak}
+          onWinStreakChange={handleWinStreakChange}
         />
 
         {/* Only show content when showCard is true */}
@@ -136,11 +158,20 @@ export const Home = () => {
               onCreateSuccess={handleDaPaintCreateSuccess}
             />
 
+            {/* Match Interface Modal */}
+            <MatchInterface
+              showMatchInterface={showMatchInterface}
+              toggleMatchInterface={toggleMatchInterface}
+              bearerToken={bearerToken}
+              onMatchComplete={handleMatchComplete}
+            />
+
             {/* Main Content */}
             {showHome && (
               <Hometokenno 
                 showDaPaintCreate={showDaPaintCreate}
                 toggleDaPaintCreate={toggleDaPaintCreate}
+                toggleMatchInterface={toggleMatchInterface}
                 toggleAuth={toggleAuth}
                 isAuthenticated={isAuthenticated}
               />

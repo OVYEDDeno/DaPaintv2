@@ -2,7 +2,12 @@ import React from "react";
 import { Footer } from "./Footer";
 import { DaPaintLockIn } from "./DaPaintLockIn";
 
-export const Hometokenno = ({ toggleAuth, toggleDaPaintCreate, isAuthenticated }) => {
+export const Hometokenno = ({ 
+  toggleAuth, 
+  toggleDaPaintCreate, 
+  toggleMatchInterface,
+  isAuthenticated 
+}) => {
   return (
     <main className="m-3">
       {/* Hero Section */}
@@ -33,18 +38,28 @@ export const Hometokenno = ({ toggleAuth, toggleDaPaintCreate, isAuthenticated }
           )}
           {isAuthenticated && (
             <>
-              <button
-                className="golden-button rounded-pill w-50 mt-2"
-                onClick={toggleDaPaintCreate}
-              >
-                <span className="golden-text" style={{ fontSize: "17px" }}>
-                  Create a DaPaint
-                </span>
-              </button>
-              {/* <DaPaintLockIn /> */}
+              <div className="d-flex gap-3 justify-content-center">
+                <button
+                  className="golden-button rounded-pill"
+                  onClick={toggleDaPaintCreate}
+                  style={{ fontSize: "17px", padding: "10px 20px" }}
+                >
+                  <span className="golden-text">
+                    Create a DaPaint
+                  </span>
+                </button>
+                <button
+                  className="btn btn-outline-light rounded-pill"
+                  onClick={toggleMatchInterface}
+                  style={{ fontSize: "17px", padding: "10px 20px" }}
+                >
+                  View Active Match
+                </button>
+              </div>
+              <DaPaintLockIn />
             </>
-          )}          
-          </div>
+          )}
+        </div>
       </section>
 
       {/* About Section */}
@@ -83,7 +98,7 @@ export const Hometokenno = ({ toggleAuth, toggleDaPaintCreate, isAuthenticated }
             <div className="text-center">
               <button
                 className="golden-button rounded-pill w-50 mb-3"
-                onClick={() => {/* Navigate to games */ }}
+                onClick={toggleDaPaintCreate}
               >
                 <span className="golden-text" style={{ fontSize: "17px" }}>
                   Continue Playing
@@ -150,7 +165,7 @@ export const Hometokenno = ({ toggleAuth, toggleDaPaintCreate, isAuthenticated }
           </div>
         )}
       </section>
-      {/* <Footer /> */}
+      <Footer />
     </main>
   );
 };
