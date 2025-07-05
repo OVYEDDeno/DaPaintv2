@@ -39,22 +39,17 @@ export const Hometokenno = ({
       )}
 
       {/* Hero Section */}
+          {!isAuthenticated && (
       <section className="hero-section">
-        <h1 className="heroh1 text-center" style={{ marginTop: "168px" }}>
-          {isAuthenticated
-            ? "Welcome Back, Champion!"
-            : "Winners Don't Just Play…They Profit!"
-          }
+        <h1 className="heroh1 text-center" style={{ marginTop: "168px" }}> "Winners Don't Just Play…They Profit!"
+          
         </h1>
 
         <div className="text-center" style={{ color: "#ffffff", fontSize: "17px" }}>
           <p className="mb-3">
-            {isAuthenticated
-              ? "Ready to dominate the competition and earn your rewards?"
-              : "Welcome to DaPaint.org—the FREE intuitive platform where players get paid what they're worth."
-            }
+            "Welcome to DaPaint.org—the FREE intuitive platform where players get paid what they're worth."
+            
           </p>
-          {!isAuthenticated && (
             <button
               className="golden-button rounded-pill w-50 mt-2"
               onClick={toggleAuth}
@@ -84,7 +79,7 @@ export const Hometokenno = ({
                   View Active Match
                 </button>
               </div>
-              <DaPaintLockIn />
+              {/* <DaPaintLockIn /> */}
             </>
           )}
         </div>
