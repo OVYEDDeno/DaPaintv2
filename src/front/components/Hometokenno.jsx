@@ -41,10 +41,10 @@ export const Hometokenno = ({ toggleAuth, toggleDaPaintCreate, isAuthenticated }
                   Create a DaPaint
                 </span>
               </button>
-              <DaPaintLockIn />
+              {/* <DaPaintLockIn /> */}
             </>
-          )}
-        </div>
+          )}          
+          </div>
       </section>
 
       {/* About Section */}
@@ -150,7 +150,7 @@ export const Hometokenno = ({ toggleAuth, toggleDaPaintCreate, isAuthenticated }
           </div>
         )}
       </section>
-      <Footer />
+      {/* <Footer /> */}
     </main>
   );
 };
