@@ -86,7 +86,8 @@ export const Hometokenno = ({
       {/* Main Content Section */}
       <section className="container text-black" style={{ marginTop: "168px" }}>
         {isAuthenticated ? (
-          // Chat Section with Ad Space for Authenticated Users          <div className="chat-dashboard">
+          // Chat Section with Ad Space for Authenticated Users          
+  <div className="chat-dashboard">
            
 
             {/* Ad Space */}
