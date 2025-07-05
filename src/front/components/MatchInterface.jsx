@@ -154,6 +154,28 @@ export const MatchInterface = ({
     }
   };
 
+  const handleReportIssue = () => {
+    // Open email client with pre-filled support email
+    const subject = encodeURIComponent(`Match Issue Report - Match ID: ${match.id}`);
+    const body = encodeURIComponent(`
+Match Details:
+- Sport: ${match.sport}
+- Location: ${match.location}
+- Time: ${match.time}
+- Date: ${match.date}
+- Host: ${match.host.name}
+- Foe: ${match.foe.name}
+
+Issue Description:
+[Please describe the issue you encountered]
+
+Additional Information:
+[Any additional details that might help us resolve this issue]
+    `);
+    
+    window.open(`mailto:support@dapaint.org?subject=${subject}&body=${body}`, '_blank');
+  };
+
   const formatTime = (timestamp) => {
     return new Date(timestamp).toLocaleTimeString([], { 
       hour: '2-digit', 
@@ -174,10 +196,10 @@ export const MatchInterface = ({
           >
             ←
           </button>
-          <h2>Match Details</h2>
+          <h2>Match In Progress</h2>
           <div className="match-status">
             <span className={`status-badge ${match.status}`}>
-              {match.status.toUpperCase()}
+              LIVE
             </span>
           </div>
         </div>
@@ -233,9 +255,26 @@ export const MatchInterface = ({
           </div>
         </div>
 
-        {/* Chat Section */}
+        {/* Chat Section with Ad Space */}
         <div className="chat-section">
           <h4>Match Chat</h4>
+          
+          {/* Ad Space */}
+          <div className="ad-space">
+            <div className="ad-banner">
+              <img 
+                src="https://images.pexels.com/photos/1552242/pexels-photo-1552242.jpeg?auto=compress&cs=tinysrgb&w=600" 
+                alt="Advertisement"
+                className="ad-image"
+              />
+              <div className="ad-content">
+                <h5>Nike Air Jordan</h5>
+                <p>Elevate your game with the latest Air Jordans. Performance meets style.</p>
+                <button className="ad-cta">Shop Now</button>
+              </div>
+            </div>
+          </div>
+
           <div className="messages-container">
             {messages.map((msg) => (
               <div key={msg.id} className={`message ${msg.senderName === 'You' ? 'own' : 'other'}`}>
@@ -273,7 +312,10 @@ export const MatchInterface = ({
               >
                 Submit Match Result
               </button>
-              <button className="btn-danger">
+              <button 
+                className="btn-danger"
+                onClick={handleReportIssue}
+              >
                 Report Issue
               </button>
             </>
@@ -379,7 +421,7 @@ export const MatchInterface = ({
           left: 0;
           right: 0;
           bottom: 0;
-          background: rgba(0, 0, 0, 0.9);
+          background: rgba(0, 0, 0, 0.95);
           display: flex;
           align-items: center;
           justify-content: center;
@@ -435,11 +477,15 @@ export const MatchInterface = ({
           border-radius: 20px;
           font-size: 12px;
           font-weight: bold;
+          background: #ff4444;
+          color: white;
+          animation: pulse 2s infinite;
         }
 
-        .status-badge.confirmed {
-          background: #4CAF50;
-          color: white;
+        @keyframes pulse {
+          0% { opacity: 1; }
+          50% { opacity: 0.7; }
+          100% { opacity: 1; }
         }
 
         .match-info-section {
@@ -565,6 +611,57 @@ export const MatchInterface = ({
         .chat-section h4 {
           margin: 0 0 15px 0;
           color: #333;
+        }
+
+        .ad-space {
+          margin-bottom: 20px;
+        }
+
+        .ad-banner {
+          display: flex;
+          align-items: center;
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          border-radius: 10px;
+          padding: 15px;
+          color: white;
+          gap: 15px;
+        }
+
+        .ad-image {
+          width: 80px;
+          height: 80px;
+          border-radius: 8px;
+          object-fit: cover;
+        }
+
+        .ad-content {
+          flex: 1;
+        }
+
+        .ad-content h5 {
+          margin: 0 0 5px 0;
+          font-size: 16px;
+        }
+
+        .ad-content p {
+          margin: 0 0 10px 0;
+          font-size: 14px;
+          opacity: 0.9;
+        }
+
+        .ad-cta {
+          background: white;
+          color: #667eea;
+          border: none;
+          padding: 8px 16px;
+          border-radius: 20px;
+          font-weight: bold;
+          cursor: pointer;
+          font-size: 12px;
+        }
+
+        .ad-cta:hover {
+          background: #f0f0f0;
         }
 
         .messages-container {
@@ -797,6 +894,16 @@ export const MatchInterface = ({
           .match-meta {
             flex-direction: column;
             gap: 10px;
+          }
+
+          .ad-banner {
+            flex-direction: column;
+            text-align: center;
+          }
+
+          .ad-image {
+            width: 60px;
+            height: 60px;
           }
         }
       `}</style>

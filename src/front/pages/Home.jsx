@@ -7,7 +7,7 @@ import { Header } from "../components/Header";
 import { Hometokenno } from "../components/Hometokenno";
 import { Adstokenno } from "../components/Adstokenno";
 import { Adstoken } from "../components/Adstoken";
-import { Bg } from "../components/Bg"; // Make sure to import Bg component
+import { Bg } from "../components/Bg";
 
 export const Home = () => {
   const navigate = useNavigate();
@@ -20,6 +20,11 @@ export const Home = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(true);
   const [bearerToken, setBearerToken] = useState(null);
   const [currentWinStreak, setCurrentWinStreak] = useState(7);
+  const [currentUser, setCurrentUser] = useState({
+    id: 1,
+    name: "Current User",
+    avatar: "https://icons.iconarchive.com/icons/microsoft/fluentui-emoji-3d/512/Man-3d-Medium-Dark-icon.png"
+  });
 
   // Check for existing token on component mount
   useEffect(() => {
@@ -105,6 +110,7 @@ export const Home = () => {
     } else {
       setCurrentWinStreak(0); // Reset streak if lost
     }
+    setShowMatchInterface(false);
   };
 
   const handleLogout = () => {
@@ -123,23 +129,25 @@ export const Home = () => {
 
   return (
     <>
-      {/* Background Component - Always render */}
-      <Bg showCard={showCard} />
+      {/* Background Component - Only show when showCard is true */}
+      {showCard && <Bg showCard={showCard} />}
       
       <div className="scroll-container">
-        {/* Header Section - Always show */}
-        <Header
-          showHome={showHome}
-          toggleCard={toggleCard}
-          toggleHome={toggleHome}
-          toggleAds={toggleAds}
-          toggleAuth={toggleAuth}
-          isAuthenticated={isAuthenticated}
-          onLogout={handleLogout}
-          showCard={showCard}
-          currentWinStreak={currentWinStreak}
-          onWinStreakChange={handleWinStreakChange}
-        />
+        {/* Header Section - Always show when showCard is true */}
+        {showCard && (
+          <Header
+            showHome={showHome}
+            toggleCard={toggleCard}
+            toggleHome={toggleHome}
+            toggleAds={toggleAds}
+            toggleAuth={toggleAuth}
+            isAuthenticated={isAuthenticated}
+            onLogout={handleLogout}
+            showCard={showCard}
+            currentWinStreak={currentWinStreak}
+            onWinStreakChange={handleWinStreakChange}
+          />
+        )}
 
         {/* Only show content when showCard is true */}
         {showCard && (
@@ -158,14 +166,6 @@ export const Home = () => {
               onCreateSuccess={handleDaPaintCreateSuccess}
             />
 
-            {/* Match Interface Modal */}
-            <MatchInterface
-              showMatchInterface={showMatchInterface}
-              toggleMatchInterface={toggleMatchInterface}
-              bearerToken={bearerToken}
-              onMatchComplete={handleMatchComplete}
-            />
-
             {/* Main Content */}
             {showHome && (
               <Hometokenno 
@@ -174,6 +174,8 @@ export const Home = () => {
                 toggleMatchInterface={toggleMatchInterface}
                 toggleAuth={toggleAuth}
                 isAuthenticated={isAuthenticated}
+                bearerToken={bearerToken}
+                currentUser={currentUser}
               />
             )}
 
@@ -192,6 +194,14 @@ export const Home = () => {
             )}
           </div>
         )}
+
+        {/* Match Interface - Full screen overlay, independent of showCard */}
+        <MatchInterface
+          showMatchInterface={showMatchInterface}
+          toggleMatchInterface={toggleMatchInterface}
+          bearerToken={bearerToken}
+          onMatchComplete={handleMatchComplete}
+        />
       </div>
     </>
   );
