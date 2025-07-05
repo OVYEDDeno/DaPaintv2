@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { Auth } from "../components/Auth";
 import { DaPaintCreate } from "../components/DaPaintCreate";
 import { MatchInterface } from "../components/MatchInterface";
+import { LockInModal } from "../components/LockInModal";
+import { TicketModal } from "../components/TicketModal";
 import { Header } from "../components/Header";
 import { Hometokenno } from "../components/Hometokenno";
 import { Adstokenno } from "../components/Adstokenno";
@@ -16,10 +18,13 @@ export const Home = () => {
   const [showAuth, setShowAuth] = useState(false);
   const [showDaPaintCreate, setShowDaPaintCreate] = useState(false);
   const [showMatchInterface, setShowMatchInterface] = useState(false);
+  const [showLockInModal, setShowLockInModal] = useState(false);
+  const [showTicketModal, setShowTicketModal] = useState(false);
   const [showAds, setShowAds] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(true);
   const [bearerToken, setBearerToken] = useState(null);
   const [currentWinStreak, setCurrentWinStreak] = useState(7);
+  const [selectedMatch, setSelectedMatch] = useState(null);
   const [currentUser, setCurrentUser] = useState({
     id: 1,
     name: "Current User",
@@ -76,6 +81,16 @@ export const Home = () => {
     setShowMatchInterface((prevState) => !prevState);
   };
 
+  const toggleLockInModal = (match = null) => {
+    setSelectedMatch(match);
+    setShowLockInModal((prevState) => !prevState);
+  };
+
+  const toggleTicketModal = (match = null) => {
+    setSelectedMatch(match);
+    setShowTicketModal((prevState) => !prevState);
+  };
+
   const toggleHome = () => {
     setShowHome(true);
     setShowAds(false);
@@ -100,6 +115,24 @@ export const Home = () => {
     setBearerToken(token);
     setIsAuthenticated(true);
     setShowDaPaintCreate(false);
+  };
+
+  const handleLockInConfirm = (match) => {
+    console.log('User confirmed lock in for match:', match);
+    // Here you would typically:
+    // 1. Send API request to lock in
+    // 2. Update UI to show match is locked
+    // 3. Navigate to match interface
+    setShowMatchInterface(true);
+  };
+
+  const handleTicketPurchase = (purchaseData) => {
+    console.log('User purchased tickets:', purchaseData);
+    // Here you would typically:
+    // 1. Process payment
+    // 2. Send confirmation
+    // 3. Add tickets to user account
+    alert(`Successfully purchased ${purchaseData.quantity} ticket(s) for $${purchaseData.totalPrice}!`);
   };
 
   const handleMatchComplete = (matchResult) => {
@@ -166,12 +199,30 @@ export const Home = () => {
               onCreateSuccess={handleDaPaintCreateSuccess}
             />
 
+            {/* Lock In Modal */}
+            <LockInModal
+              showModal={showLockInModal}
+              toggleModal={toggleLockInModal}
+              match={selectedMatch}
+              onConfirm={handleLockInConfirm}
+            />
+
+            {/* Ticket Modal */}
+            <TicketModal
+              showModal={showTicketModal}
+              toggleModal={toggleTicketModal}
+              match={selectedMatch}
+              onPurchase={handleTicketPurchase}
+            />
+
             {/* Main Content */}
             {showHome && (
               <Hometokenno 
                 showDaPaintCreate={showDaPaintCreate}
                 toggleDaPaintCreate={toggleDaPaintCreate}
                 toggleMatchInterface={toggleMatchInterface}
+                toggleLockInModal={toggleLockInModal}
+                toggleTicketModal={toggleTicketModal}
                 toggleAuth={toggleAuth}
                 isAuthenticated={isAuthenticated}
                 bearerToken={bearerToken}

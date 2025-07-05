@@ -1,18 +1,23 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { HostMatchCard } from "./HostMatchCard";
 
 export const HostMatchScroller = ({ 
   onMatchSelect, 
+  onTicketPurchase,
   currentUser,
   bearerToken 
 }) => {
   const [matches, setMatches] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
+  const scrollRef = useRef(null);
+  const intervalRef = useRef(null);
 
-  // Mock data for demonstration
+  // Mock data with both types
   const mockMatches = [
     {
       id: 1,
+      type: 'looking-for-foe',
       sport: "Basketball",
       title: "1v1 Court Battle",
       location: "Downtown Court",
@@ -28,28 +33,37 @@ export const HostMatchScroller = ({
     },
     {
       id: 2,
+      type: 'selling-tickets',
       sport: "Tennis",
-      title: "Singles Match",
+      title: "Championship Finals",
       location: "City Tennis Club",
       time: "4:30 PM",
-      prize: "75",
+      ticketPrice: "25",
       host: {
         id: 3,
         name: "Serena W.",
         avatar: "https://icons.iconarchive.com/icons/microsoft/fluentui-emoji-3d/512/Woman-3d-Medium-icon.png",
         winStreak: 12,
         rating: 4.8
+      },
+      foe: {
+        id: 4,
+        name: "Venus W.",
+        avatar: "https://icons.iconarchive.com/icons/microsoft/fluentui-emoji-3d/512/Woman-3d-Medium-icon.png",
+        winStreak: 10,
+        rating: 4.7
       }
     },
     {
       id: 3,
+      type: 'looking-for-foe',
       sport: "Soccer",
       title: "Penalty Shootout",
       location: "Park Field",
       time: "5:00 PM",
       prize: "100",
       host: {
-        id: 4,
+        id: 5,
         name: "Cristiano R.",
         avatar: "https://icons.iconarchive.com/icons/microsoft/fluentui-emoji-3d/512/Man-3d-Medium-Dark-icon.png",
         winStreak: 15,
@@ -58,32 +72,64 @@ export const HostMatchScroller = ({
     },
     {
       id: 4,
+      type: 'selling-tickets',
       sport: "Boxing",
-      title: "3 Round Sparring",
+      title: "Heavyweight Showdown",
       location: "Iron Gym",
       time: "6:00 PM",
-      prize: "200",
+      ticketPrice: "50",
       host: {
-        id: 5,
+        id: 6,
         name: "Floyd M.",
         avatar: "https://icons.iconarchive.com/icons/microsoft/fluentui-emoji-3d/512/Man-3d-Medium-Dark-icon.png",
         winStreak: 20,
         rating: 4.7
+      },
+      foe: {
+        id: 7,
+        name: "Mike T.",
+        avatar: "https://icons.iconarchive.com/icons/microsoft/fluentui-emoji-3d/512/Man-3d-Medium-Dark-icon.png",
+        winStreak: 18,
+        rating: 4.8
       }
     },
     {
       id: 5,
+      type: 'looking-for-foe',
       sport: "Swimming",
       title: "50m Freestyle Race",
       location: "Olympic Pool",
       time: "7:00 PM",
       prize: "80",
       host: {
-        id: 6,
+        id: 8,
         name: "Katie L.",
         avatar: "https://icons.iconarchive.com/icons/microsoft/fluentui-emoji-3d/512/Woman-3d-Medium-icon.png",
         winStreak: 6,
         rating: 4.6
+      }
+    },
+    {
+      id: 6,
+      type: 'selling-tickets',
+      sport: "MMA",
+      title: "Octagon Warriors",
+      location: "Fight Arena",
+      time: "8:00 PM",
+      ticketPrice: "75",
+      host: {
+        id: 9,
+        name: "Connor M.",
+        avatar: "https://icons.iconarchive.com/icons/microsoft/fluentui-emoji-3d/512/Man-3d-Medium-Dark-icon.png",
+        winStreak: 14,
+        rating: 4.9
+      },
+      foe: {
+        id: 10,
+        name: "Khabib N.",
+        avatar: "https://icons.iconarchive.com/icons/microsoft/fluentui-emoji-3d/512/Man-3d-Medium-Dark-icon.png",
+        winStreak: 16,
+        rating: 5.0
       }
     }
   ];
@@ -92,19 +138,23 @@ export const HostMatchScroller = ({
     loadMatches();
   }, []);
 
+  useEffect(() => {
+    // Start auto-scroll when component mounts
+    startAutoScroll();
+    
+    // Cleanup on unmount
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+      }
+    };
+  }, [matches, isHovered]);
+
   const loadMatches = async () => {
     try {
       setLoading(true);
       
       // In real app, fetch from API
-      // const response = await fetch('/api/matches/available', {
-      //   headers: {
-      //     'Authorization': `Bearer ${bearerToken}`,
-      //   },
-      // });
-      // const data = await response.json();
-      
-      // For now, use mock data
       setTimeout(() => {
         setMatches(mockMatches);
         setLoading(false);
@@ -116,9 +166,52 @@ export const HostMatchScroller = ({
     }
   };
 
+  const startAutoScroll = () => {
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+    }
+
+    if (!isHovered && matches.length > 0 && scrollRef.current) {
+      intervalRef.current = setInterval(() => {
+        const container = scrollRef.current;
+        if (container) {
+          const scrollAmount = 2; // Pixels per interval
+          container.scrollLeft += scrollAmount;
+          
+          // Reset to beginning when reaching the end
+          if (container.scrollLeft >= container.scrollWidth - container.clientWidth) {
+            container.scrollLeft = 0;
+          }
+        }
+      }, 50); // Smooth scrolling every 50ms
+    }
+  };
+
+  const stopAutoScroll = () => {
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+    }
+  };
+
+  const handleMouseEnter = () => {
+    setIsHovered(true);
+    stopAutoScroll();
+  };
+
+  const handleMouseLeave = () => {
+    setIsHovered(false);
+    startAutoScroll();
+  };
+
   const handleLockIn = (match) => {
     if (onMatchSelect) {
       onMatchSelect(match);
+    }
+  };
+
+  const handleBuyTicket = (match) => {
+    if (onTicketPurchase) {
+      onTicketPurchase(match);
     }
   };
 
@@ -142,12 +235,19 @@ export const HostMatchScroller = ({
             ))}
           </div>
         ) : (
-          <div className="matches-scroll">
-            {matches.map((match) => (
+          <div 
+            className="matches-scroll"
+            ref={scrollRef}
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
+          >
+            {/* Duplicate matches for seamless loop */}
+            {[...matches, ...matches].map((match, index) => (
               <HostMatchCard
-                key={match.id}
+                key={`${match.id}-${index}`}
                 match={match}
                 onLockIn={handleLockIn}
+                onBuyTicket={handleBuyTicket}
                 currentUser={currentUser}
               />
             ))}
@@ -212,6 +312,7 @@ export const HostMatchScroller = ({
           overflow-x: auto;
           padding: 10px 0;
           scroll-behavior: smooth;
+          cursor: pointer;
         }
 
         .matches-scroll::-webkit-scrollbar {

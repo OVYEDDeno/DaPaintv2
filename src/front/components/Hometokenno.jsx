@@ -7,15 +7,23 @@ export const Hometokenno = ({
   toggleAuth, 
   toggleDaPaintCreate, 
   toggleMatchInterface,
+  toggleLockInModal,
+  toggleTicketModal,
   isAuthenticated,
   bearerToken,
   currentUser
 }) => {
   
   const handleMatchSelect = (match) => {
-    // When a user locks into a match, open the match interface
-    console.log('User locked into match:', match);
-    toggleMatchInterface();
+    // When a user locks into a match looking for foe, show lock in modal
+    console.log('User wants to lock into match:', match);
+    toggleLockInModal(match);
+  };
+
+  const handleTicketPurchase = (match) => {
+    // When a user wants to buy tickets, show ticket modal
+    console.log('User wants to buy tickets for match:', match);
+    toggleTicketModal(match);
   };
 
   return (
@@ -24,6 +32,7 @@ export const Hometokenno = ({
       {isAuthenticated && (
         <HostMatchScroller 
           onMatchSelect={handleMatchSelect}
+          onTicketPurchase={handleTicketPurchase}
           currentUser={currentUser}
           bearerToken={bearerToken}
         />
