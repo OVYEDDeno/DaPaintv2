@@ -1,17 +1,20 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Auth } from "../components/Auth";
+import { DaPaintCreate } from "../components/DaPaintCreate";
 import { Header } from "../components/Header";
 import { Hometokenno } from "../components/Hometokenno";
 import { Adstokenno } from "../components/Adstokenno";
 import { Adstoken } from "../components/Adstoken";
 import { Bg } from "../components/Bg"; // Make sure to import Bg component
 
+
 export const Home = () => {
   const navigate = useNavigate();
   const [showCard, setShowCard] = useState(true);
   const [showHome, setShowHome] = useState(true);
   const [showAuth, setShowAuth] = useState(false);
+  const [showDaPaintCreate, setShowDaPaintCreate] = useState(false);
   const [showAds, setShowAds] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(true);
   const [bearerToken, setBearerToken] = useState(null);
@@ -57,6 +60,10 @@ export const Home = () => {
   const toggleAuth = () => {
     setShowAuth((prevState) => !prevState);
   };
+  
+  const toggleDaPaintCreate = () => {
+    setShowDaPaintCreate((prevState) => !prevState);
+  };
 
   const toggleHome = () => {
     setShowHome(true);
@@ -76,6 +83,12 @@ export const Home = () => {
     setBearerToken(token);
     setIsAuthenticated(true);
     setShowAuth(false);
+  };
+
+  const handleDaPaintCreateSuccess = (token) => {
+    setBearerToken(token);
+    setIsAuthenticated(true);
+    setShowDaPaintCreate(false);
   };
 
   const handleLogout = () => {
@@ -109,16 +122,25 @@ export const Home = () => {
         {/* Only show content when showCard is true */}
         {showCard && (
           <div className="bg-white">
-            {/* Auth */}
+            {/* Auth Modal */}
             <Auth
               showAuth={showAuth}
               toggleAuth={toggleAuth}
               onAuthSuccess={handleAuthSuccess}
             />
 
+            {/* DaPaintCreate Modal */}
+            <DaPaintCreate
+              showDaPaintCreate={showDaPaintCreate}
+              toggleDaPaintCreate={toggleDaPaintCreate}
+              onCreateSuccess={handleDaPaintCreateSuccess}
+            />
+
             {/* Main Content */}
             {showHome && (
               <Hometokenno 
+                showDaPaintCreate={showDaPaintCreate}
+                toggleDaPaintCreate={toggleDaPaintCreate}
                 toggleAuth={toggleAuth}
                 isAuthenticated={isAuthenticated}
               />

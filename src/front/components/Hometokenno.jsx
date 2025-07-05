@@ -2,7 +2,7 @@ import React from "react";
 import { Footer } from "./Footer";
 import { DaPaintLockIn } from "./DaPaintLockIn";
 
-export const Hometokenno = ({ toggleAuth, isAuthenticated }) => {
+export const Hometokenno = ({ toggleAuth, toggleDaPaintCreate, isAuthenticated }) => {
   return (
     <main className="m-3">
       {/* Hero Section */}
@@ -35,7 +35,7 @@ export const Hometokenno = ({ toggleAuth, isAuthenticated }) => {
             <>
               <button
                 className="golden-button rounded-pill w-50 mt-2"
-                onClick={() => {/* Navigate to game */ }}
+                onClick={toggleDaPaintCreate}
               >
                 <span className="golden-text" style={{ fontSize: "17px" }}>
                   Create a DaPaint
