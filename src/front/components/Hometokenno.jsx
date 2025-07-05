@@ -40,50 +40,48 @@ export const Hometokenno = ({
 
       {/* Hero Section */}
           {!isAuthenticated && (
-      <section className="hero-section">
-        <h1 className="heroh1 text-center" style={{ marginTop: "168px" }}> "Winners Don't Just Play…They Profit!"
-          
-        </h1>
+  <section className="hero-section">
+    <h1 className="heroh1 text-center" style={{ marginTop: "168px" }}>
+      "Winners Don't Just Play…They Profit!"
+    </h1>
 
-        <div className="text-center" style={{ color: "#ffffff", fontSize: "17px" }}>
-          <p className="mb-3">
-            "Welcome to DaPaint.org—the FREE intuitive platform where players get paid what they're worth."
-            
-          </p>
-            <button
-              className="golden-button rounded-pill w-50 mt-2"
-              onClick={toggleAuth}
-            >
-              <span className="golden-text" style={{ fontSize: "17px" }}>
-                Join The Movement
-              </span>
-            </button>
-          )}
-          {isAuthenticated && (
-            <>
-              <div className="d-flex gap-3 justify-content-center">
-                <button
-                  className="golden-button rounded-pill"
-                  onClick={toggleDaPaintCreate}
-                  style={{ fontSize: "17px", padding: "10px 20px" }}
-                >
-                  <span className="golden-text">
-                    Create a DaPaint
-                  </span>
-                </button>
-                <button
-                  className="btn btn-outline-light rounded-pill"
-                  onClick={toggleMatchInterface}
-                  style={{ fontSize: "17px", padding: "10px 20px" }}
-                >
-                  View Active Match
-                </button>
-              </div>
-              {/* <DaPaintLockIn /> */}
-            </>
-          )}
-        </div>
-      </section>
+    <div className="text-center" style={{ color: "#ffffff", fontSize: "17px" }}>
+      <p className="mb-3">
+        "Welcome to DaPaint.org—the FREE intuitive platform where players get paid what they're worth."
+      </p>
+      <button
+        className="golden-button rounded-pill w-50 mt-2"
+        onClick={toggleAuth}
+      >
+        <span className="golden-text" style={{ fontSize: "17px" }}>
+          Join The Movement
+        </span>
+      </button>
+    </div>
+  </section>
+)}
+
+{isAuthenticated && (
+  <>
+    <div className="d-flex gap-3 justify-content-center">
+      <button
+        className="golden-button rounded-pill"
+        onClick={toggleDaPaintCreate}
+        style={{ fontSize: "17px", padding: "10px 20px" }}
+      >
+        <span className="golden-text">Create a DaPaint</span>
+      </button>
+      <button
+        className="btn btn-outline-light rounded-pill"
+        onClick={toggleMatchInterface}
+        style={{ fontSize: "17px", padding: "10px 20px" }}
+      >
+        View Active Match
+      </button>
+    </div>
+  </>
+)}
+
 
       {/* Main Content Section */}
       <section className="container text-black" style={{ marginTop: "168px" }}>
