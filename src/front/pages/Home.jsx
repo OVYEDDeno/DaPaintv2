@@ -6,6 +6,9 @@ import { MatchInterface } from "../components/MatchInterface";
 import { LockInModal } from "../components/LockInModal";
 import { TicketModal } from "../components/TicketModal";
 import { Header } from "../components/Header";
+import { BottomNav } from "../components/BottomNav";
+import { LiveMatchesHeader } from "../components/LiveMatchesHeader";
+import { ProfileComponent } from "../components/ProfileComponent";
 import { Hometokenno } from "../components/Hometokenno";
 import { Adstokenno } from "../components/Adstokenno";
 import { Adstoken } from "../components/Adstoken";
@@ -20,6 +23,7 @@ export const Home = () => {
   const [showMatchInterface, setShowMatchInterface] = useState(false);
   const [showLockInModal, setShowLockInModal] = useState(false);
   const [showTicketModal, setShowTicketModal] = useState(false);
+  const [showProfile, setShowProfile] = useState(false);
   const [showAds, setShowAds] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(true);
   const [bearerToken, setBearerToken] = useState(null);
@@ -28,6 +32,7 @@ export const Home = () => {
   const [currentUser, setCurrentUser] = useState({
     id: 1,
     name: "Current User",
+    email: "user@example.com",
     avatar: "https://icons.iconarchive.com/icons/microsoft/fluentui-emoji-3d/512/Man-3d-Medium-Dark-icon.png"
   });
 
@@ -91,6 +96,10 @@ export const Home = () => {
     setShowTicketModal((prevState) => !prevState);
   };
 
+  const toggleProfile = () => {
+    setShowProfile((prevState) => !prevState);
+  };
+
   const toggleHome = () => {
     setShowHome(true);
     setShowAds(false);
@@ -119,29 +128,20 @@ export const Home = () => {
 
   const handleLockInConfirm = (match) => {
     console.log('User confirmed lock in for match:', match);
-    // Here you would typically:
-    // 1. Send API request to lock in
-    // 2. Update UI to show match is locked
-    // 3. Navigate to match interface
     setShowMatchInterface(true);
   };
 
   const handleTicketPurchase = (purchaseData) => {
     console.log('User purchased tickets:', purchaseData);
-    // Here you would typically:
-    // 1. Process payment
-    // 2. Send confirmation
-    // 3. Add tickets to user account
     alert(`Successfully purchased ${purchaseData.quantity} ticket(s) for $${purchaseData.totalPrice}!`);
   };
 
   const handleMatchComplete = (matchResult) => {
     console.log('Match completed:', matchResult);
-    // Update win streak based on result
     if (matchResult.winner === 'host') {
       setCurrentWinStreak(prev => prev + 1);
     } else {
-      setCurrentWinStreak(0); // Reset streak if lost
+      setCurrentWinStreak(0);
     }
     setShowMatchInterface(false);
   };
@@ -152,12 +152,12 @@ export const Home = () => {
     setIsAuthenticated(false);
   };
 
-  const handleNavigation = (path) => {
-    navigate(path);
-  };
-
   const handleWinStreakChange = (newStreak) => {
     setCurrentWinStreak(newStreak);
+  };
+
+  const handleProfileUpdate = (updatedProfile) => {
+    setCurrentUser(prev => ({ ...prev, ...updatedProfile }));
   };
 
   return (
@@ -165,7 +165,7 @@ export const Home = () => {
       {/* Background Component - Only show when showCard is true */}
       {showCard && <Bg showCard={showCard} />}
       
-      <div className="scroll-container">
+      <div className="app-container">
         {/* Header Section - Always show when showCard is true */}
         {showCard && (
           <Header
@@ -174,6 +174,8 @@ export const Home = () => {
             toggleHome={toggleHome}
             toggleAds={toggleAds}
             toggleAuth={toggleAuth}
+            toggleProfile={toggleProfile}
+            toggleDaPaintCreate={toggleDaPaintCreate}
             isAuthenticated={isAuthenticated}
             onLogout={handleLogout}
             showCard={showCard}
@@ -182,9 +184,20 @@ export const Home = () => {
           />
         )}
 
-        {/* Only show content when showCard is true */}
+        {/* Live Matches Header - Show when authenticated and showCard is true */}
+        {showCard && isAuthenticated && (
+          <LiveMatchesHeader
+            onMatchSelect={toggleLockInModal}
+            onTicketPurchase={toggleTicketModal}
+            currentUser={currentUser}
+            bearerToken={bearerToken}
+            toggleDaPaintCreate={toggleDaPaintCreate}
+          />
+        )}
+
+        {/* Main Content Container */}
         {showCard && (
-          <div className="bg-white">
+          <div className="main-content">
             {/* Auth Modal */}
             <Auth
               showAuth={showAuth}
@@ -246,6 +259,25 @@ export const Home = () => {
           </div>
         )}
 
+        {/* Bottom Navigation - Show when authenticated and showCard is true */}
+        {showCard && (
+          <BottomNav
+            currentWinStreak={currentWinStreak}
+            onWinStreakChange={handleWinStreakChange}
+            toggleProfile={toggleProfile}
+            isAuthenticated={isAuthenticated}
+          />
+        )}
+
+        {/* Profile Component - Full screen overlay */}
+        <ProfileComponent
+          showProfile={showProfile}
+          toggleProfile={toggleProfile}
+          currentUser={currentUser}
+          bearerToken={bearerToken}
+          onProfileUpdate={handleProfileUpdate}
+        />
+
         {/* Match Interface - Full screen overlay, independent of showCard */}
         <MatchInterface
           showMatchInterface={showMatchInterface}
@@ -254,6 +286,38 @@ export const Home = () => {
           onMatchComplete={handleMatchComplete}
         />
       </div>
+
+      <style jsx>{`
+        .app-container {
+          min-height: 100vh;
+          display: flex;
+          flex-direction: column;
+          position: relative;
+        }
+
+        .main-content {
+          flex: 1;
+          padding-top: ${isAuthenticated ? '200px' : '80px'};
+          padding-bottom: ${isAuthenticated ? '80px' : '20px'};
+          overflow-y: auto;
+          background: rgba(255, 255, 255, 0.95);
+          backdrop-filter: blur(10px);
+        }
+
+        @media (max-width: 768px) {
+          .main-content {
+            padding-top: ${isAuthenticated ? '180px' : '70px'};
+            padding-bottom: ${isAuthenticated ? '75px' : '15px'};
+          }
+        }
+
+        @media (max-width: 480px) {
+          .main-content {
+            padding-top: ${isAuthenticated ? '160px' : '65px'};
+            padding-bottom: ${isAuthenticated ? '70px' : '10px'};
+          }
+        }
+      `}</style>
     </>
   );
 };
