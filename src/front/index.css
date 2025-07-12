@@ -15,8 +15,12 @@
   max-width: 600px;
   margin: 0 auto;
 }
-.DaPaintlogo {
-  width: 68px;
+.DaPaintlogo2 {
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
 }
 .input-pair {
   display: flex;
@@ -28,7 +32,7 @@
   background-color: #fa0000;
   color: #ffffff;
   border: none;
-  font-size: .5rem;
+  font-size: 0.5rem;
   border-radius: 8px;
   cursor: pointer;
   padding: 0 1em;
@@ -107,9 +111,7 @@
   opacity: 0.5;
   background-image: radial-gradient(var(--white-80) 20%, transparent 20%),
     radial-gradient(var(--white-100) 20%, transparent 20%);
-  background-position:
-    0 0,
-    4px 4px;
+  background-position: 0 0, 4px 4px;
   background-size: 8px 8px;
   mix-blend-mode: hard-light;
   animation: dots 0.5s infinite linear;
@@ -117,13 +119,544 @@
 
 @keyframes dots {
   0% {
-    background-position:
-      0 0,
-      4px 4px;
+    background-position: 0 0, 4px 4px;
   }
   100% {
-    background-position:
-      8px 0,
-      12px 4px;
+    background-position: 8px 0, 12px 4px;
+  }
+}
+/* General Styles */
+body, html {
+  margin: 0;
+  padding: 0;
+  font-family: "Belleza", sans-serif;
+  background-color: #06002e;
+  color: #e3e3e3;
+  width: 100vw;
+  height: 100vh;
+  overflow-x: hidden;
+}
+
+.shop-container {
+  width: 100vw;
+  height: 100vh;
+  padding: 20px;
+  box-sizing: border-box;
+  overflow-y: auto;
+}
+
+/* Search Container */
+.search-container {
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.search-input {
+  width: 100%;
+  padding: 10px 15px;
+  font-size: 1rem;
+  border: 2px solid #e3e3e3;
+  background-color: transparent;
+  color: #e3e3e3;
+  border-radius: 25px;
+}
+
+/* Filter Container */
+.filter-container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.filter-label {
+  margin-right: 10px;
+  font-size: 1rem;
+}
+
+#sort-options {
+  padding: 8px 15px;
+  font-size: 1rem;
+  border: 2px solid #e3e3e3;
+  background-color: transparent;
+  color: #e3e3e3;
+  border-radius: 25px;
+}
+
+.advanced-filter-btn, .cart-btn {
+  padding: 8px 15px;
+  font-size: 1rem;
+  color: #fff;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.advanced-filter-btn {
+  background-color: #007bff;
+}
+
+.advanced-filter-btn:hover {
+  background-color: #0056b3;
+}
+
+.cart-btn {
+  background-color: #4CAF50;
+}
+
+.cart-btn:hover {
+  background-color: #45a049;
+}
+
+/* Product Grid */
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.product-card {
+  background-color: #080040;
+  border-radius: 10px;
+  padding: 15px;
+  text-align: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s;
+}
+
+.product-card:hover {
+  transform: translateY(-5px);
+}
+
+.product-image {
+  width: 100%;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.product-name {
+  font-size: 2em;
+}
+
+.product-price {
+  font-size: 1.1em;
+  font-weight: bold;
+  color: #007bff;
+}
+
+.product-rating {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+}
+
+.stars {
+  color: #FFD700;
+}
+
+.rating-count {
+  font-size: 0.9em;
+  color: #a0a0a0;
+}
+
+.product-bought {
+  font-size: 0.9em;
+  color: #4CAF50;
+  margin-bottom: 5px;
+}
+
+.countdown-timer {
+  font-size: 0.9em;
+  font-weight: bold;
+  color: #FF4500;
+  margin-bottom: 10px;
+}
+
+/* Action Buttons */
+.button-container {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+
+.action-button {
+  padding: 10px 20px;
+  font-size: 1rem;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.action-button:hover {
+  background-color: #0056b3;
+}
+
+/* Modal Styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background-color: #06002e;
+  padding: 20px;
+  border-radius: 8px;
+  max-width: 500px;
+  width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.modal-header h2 {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.close-button {
+  background: none;
+  color: #fff;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.modal-body {
+  margin-bottom: 20px;
+}
+
+.modal-image {
+  width: 100%;
+  max-height: 300px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+.modal-price {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #007bff;
+}
+
+.modal-rating, .modal-bought, .modal-countdown {
+  margin-bottom: 5px;
+}
+
+.modal-description {
+  margin-top: 10px;
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.bid-input,
+.filter-input,
+.filter-select {
+  width: 100%;
+  padding: 8px;
+  margin-top: 5px;
+  border: 1px solid #e3e3e3;
+  background-color: #080040;
+  color: #e3e3e3;
+  border-radius: 4px;
+}
+
+.filter-option {
+  margin-bottom: 15px;
+}
+
+.filter-option label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .product-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .product-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .filter-container {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  #sort-options, .advanced-filter-btn, .cart-btn {
+    margin-top: 10px;
+    width: 100%;
+  }
+}
+
+/* HostMatchCard Styles */
+.host-match-card {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  border-radius: 12px;
+  padding: 15px;
+  margin-bottom: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  min-width: 320px;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.host-match-card.looking-for-foe {
+  border: 1.5px solid #a55d07;
+  background-image: linear-gradient(160deg, #a54e07, #b47e11, #fef1a2, #bc881b, #a54e07);
+  color: #131313;
+}
+.host-match-card.looking-for-foe .match-status-badge,
+.host-match-card.looking-for-foe .sport-badge {
+  background-image: linear-gradient(160deg, #a54e07, #b47e11, #fef1a2, #bc881b, #a54e07);
+  color: #131313;
+  border: 1px solid #a55d07;
+  text-shadow: 0 2px 2px rgba(250, 227, 133, 1);
+}
+.host-match-card.looking-for-foe .host-avatar {
+  border: 2px solid #a55d07;
+}
+.host-match-card.looking-for-foe .lock-in-btn {
+  background-image: linear-gradient(160deg, #a54e07, #b47e11, #fef1a2, #bc881b, #a54e07);
+  border: 1px solid #a55d07;
+  color: #131313;
+  text-shadow: 0 2px 2px rgba(250, 227, 133, 1);
+}
+.host-match-card.looking-for-foe .lock-in-btn:hover:not(:disabled) {
+  filter: brightness(1.1);
+}
+
+.host-match-card.selling-tickets {
+  border: 2px solid #ff0000;
+  background: #131313;
+  color: #fefefe;
+}
+.host-match-card.selling-tickets .match-status-badge,
+.host-match-card.selling-tickets .sport-badge {
+  background: #ff0000;
+  color: #fefefe;
+  border: 1px solid #ff0000;
+}
+.host-match-card.selling-tickets .player-avatar {
+  border: 2px solid #ff0000;
+}
+.host-match-card.selling-tickets .buy-ticket-btn {
+  background: #ff0000;
+  color: #fefefe;
+  border: 1px solid #ff0000;
+}
+.host-match-card.selling-tickets .buy-ticket-btn:hover {
+  filter: brightness(1.1);
+}
+
+.host-match-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+.match-status-badge {
+  position: absolute;
+  top: -8px;
+  left: 15px;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 10px;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.match-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.sport-badge {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: bold;
+  display: inline-block;
+  margin-bottom: 8px;
+}
+
+.match-details h4 {
+  margin: 0 0 8px 0;
+  color: #333;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.match-meta {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.match-meta span {
+  color: #666;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.host-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.host-avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.host-details {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.host-name {
+  font-weight: bold;
+  color: #333;
+  font-size: 14px;
+}
+
+.host-stats {
+  display: flex;
+  gap: 8px;
+}
+
+.host-stats span {
+  color: #666;
+  font-size: 11px;
+}
+
+.lock-in-btn, .buy-ticket-btn {
+  border-radius: 25px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 14px;
+  flex-shrink: 0;
+  text-transform: uppercase;
+  padding: 12px 20px;
+  border: none;
+}
+
+.lock-in-btn:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.players-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.player-mini {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.player-avatar {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.player-name {
+  font-size: 10px;
+  font-weight: bold;
+  color: #333;
+  text-align: center;
+}
+
+.vs-text {
+  font-size: 12px;
+  font-weight: bold;
+  color: #666;
+  margin: 0 5px;
+}
+
+@media (max-width: 768px) {
+  .host-match-card {
+    min-width: 180px;
+    width: 90vw;
+    max-width: 98vw;
+    padding: 8px;
+    gap: 6px;
+  }
+  .match-details h4 {
+    font-size: 14px;
+  }
+  .match-meta {
+    gap: 8px;
+  }
+  .match-meta span {
+    font-size: 11px;
+  }
+  .host-avatar {
+    width: 40px;
+    height: 40px;
+  }
+  .host-name {
+    font-size: 12px;
+  }
+  .host-stats span {
+    font-size: 10px;
+  }
+  .lock-in-btn, .buy-ticket-btn {
+    padding: 8px 10px;
+    font-size: 12px;
+  }
+  .player-avatar {
+    width: 30px;
+    height: 30px;
+  }
+  .player-name {
+    font-size: 9px;
+  }
+  .vs-text {
+    font-size: 10px;
   }
 }

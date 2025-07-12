@@ -164,7 +164,7 @@ export const Home = () => {
 							style={{ fontSize: "13px" }}
 							onClick={toggleCard}
 						>
-							Play On DaPaint
+							Play On DaPaint1
 						</button>
 					)}
 

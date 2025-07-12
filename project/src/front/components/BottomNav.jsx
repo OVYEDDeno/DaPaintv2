@@ -31,14 +31,14 @@ export const BottomNav = ({
   return (
     <>
       <div className="bottom-nav">
-        <button
+        {/* <button
           onClick={decreaseStreak}
           className="nav-btn decrease-btn"
           title="Decrease Streak"
         >
           <span className="nav-icon">➖</span>
           <span className="nav-label">Decrease</span>
-        </button>
+        </button> */}
         
         <button
           onClick={toggleProfile}
@@ -47,6 +47,22 @@ export const BottomNav = ({
         >
           <span className="nav-icon">👤</span>
           <span className="nav-label">Profile</span>
+        </button>
+        <button
+          onClick={toggleProfile}
+          className="nav-btn profile-btn"
+          title="Profile"
+        >
+          <span className="nav-icon">👤</span>
+          <span className="nav-label">Notifications</span>
+        </button>
+        <button
+          onClick={toggleProfile}
+          className="nav-btn profile-btn"
+          title="Profile"
+        >
+          <span className="nav-icon">👤</span>
+          <span className="nav-label">Settings</span>
         </button>
         
         <button

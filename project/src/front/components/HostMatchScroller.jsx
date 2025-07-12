@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { HostMatchCard } from "./HostMatchCard";
+// import { HostMatchCard } from "./HostMatchCard";
 
 export const HostMatchScroller = ({ 
   onMatchSelect, 
@@ -131,6 +131,22 @@ export const HostMatchScroller = ({
         winStreak: 16,
         rating: 5.0
       }
+    },
+    {
+      id: 7,
+      type: 'looking-for-foe',
+      sport: "Basketball",
+      title: "Miami Street Ball",
+      location: "1260 northwest 100th terrace miami fl 33147",
+      time: "2024-06-15 19:30",
+      prize: "150",
+      host: {
+        id: 11,
+        name: "Miami Baller",
+        avatar: "https://icons.iconarchive.com/icons/microsoft/fluentui-emoji-3d/512/Man-3d-Medium-Dark-icon.png",
+        winStreak: 7,
+        rating: 4.8
+      }
     }
   ];
 
@@ -218,7 +234,7 @@ export const HostMatchScroller = ({
   return (
     <div className="host-match-scroller">
       <div className="scroller-header">
-        <h3>🔥 Live Matches - Lock In Now!</h3>
+        <h3>🔥 Live Matches - Lock In Now!1</h3>
         <div className="live-indicator">
           <span className="live-dot"></span>
           <span>LIVE</span>

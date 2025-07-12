@@ -197,7 +197,7 @@ export const LiveMatchesHeader = ({
         >
           🔥
         </button>
-        <h3>Live Matches - Lock In Now!</h3>
+        <h3>Live Matches - Lock In Now!2</h3>
         <div className="live-indicator">
           <span className="live-dot"></span>
           <span>LIVE</span>
