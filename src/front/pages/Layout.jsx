@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
-import { HostMatchCard } from "../components/HostMatchCard";
 
 const Layout = () => {
   const navigate = useNavigate();
@@ -394,10 +393,6 @@ const Layout = () => {
     navigate("/profile");
   };
 
-  const handleChatClick = () => {
-    navigate("/chat");
-  };
-
   const handleNotificationsClick = () => {
     navigate("/notifications");
   };
@@ -413,17 +408,30 @@ const Layout = () => {
 
 
   return (
-    <div style={{ background: "#131313", minHeight: "100vh", color: "#fefefe" }}>
+    <div style={{ 
+      background: "#131313", 
+      height: "100vh", 
+      color: "#fefefe",
+      display: "flex",
+      flexDirection: "column",
+      overflow: "hidden"
+    }}>
       {/* Header */}
-      <header style={{ 
-        padding: "16px 24px", 
-        borderBottom: "1px solid #222", 
-        background: "#131313",
-        position: "sticky",
-        top: 0,
-        zIndex: 100,
-        boxShadow: "0 2px 8px rgba(0,0,0,0.3)"
-      }}>
+      <header
+        style={{
+          width: "100%",
+          color: "#fff",
+          padding: "6px 14px 0 14px",
+          borderRadius: 0,
+          boxShadow: "none",
+          margin: 0,
+          position: "relative",
+          zIndex: 10,
+          fontWeight: 700,
+          fontSize: 16,
+          letterSpacing: 1,
+        }}
+      >
         <div style={{ 
           display: "flex", 
           width: "100%", 
@@ -602,210 +610,11 @@ const Layout = () => {
         </div>
 
         {/* Auth section */}
-        {isAuthenticated && (
-          <>
-            {/* Upcoming DaPaints horizontal list */}
-            <div style={{ 
-              marginTop: 16, 
-              width: "100%", 
-              display: "flex", 
-              alignItems: "center", 
-              justifyContent: "space-between",
-              padding: "0 16px"
-            }}>
-              <div style={{ display: "flex", alignItems: "center", flexWrap: "wrap", gap: "8px" }}>
-                <span style={{ color: "#fefefe", fontWeight: "bold", marginRight: 8 }}>
-                  Upcoming DaPaint
-                </span>
-                <button 
-                  onClick={() => setActiveFilter('all')}
-                  style={{ 
-                    background: activeFilter === 'all' ? '#ff0000' : '#131313', 
-                    color: activeFilter === 'all' ? '#fefefe' : '#ff0000', 
-                    border: "1px solid #ff0000", 
-                    borderRadius: 4, 
-                    padding: "4px 8px", 
-                    cursor: "pointer",
-                    fontSize: "12px",
-                    transition: "all 0.2s ease"
-                  }}
-                  onMouseEnter={(e) => {
-                    e.target.style.background = "#ff0000";
-                    e.target.style.color = "#fefefe";
-                  }}
-                  onMouseLeave={(e) => {
-                    e.target.style.background = "#131313";
-                    e.target.style.color = "#ff0000";
-                  }}
-                >
-                  All
-                </button>
-                <button 
-                  onClick={() => setActiveFilter('looking-for-foe')}
-                  style={{ 
-                    background: activeFilter === 'looking-for-foe' ? '#ff0000' : '#131313', 
-                    color: activeFilter === 'looking-for-foe' ? '#fefefe' : '#ff0000', 
-                    border: "1px solid #ff0000", 
-                    borderRadius: 4, 
-                    padding: "4px 8px", 
-                    cursor: "pointer",
-                    fontSize: "12px",
-                    transition: "all 0.2s ease"
-                  }}
-                  onMouseEnter={(e) => {
-                    e.target.style.background = "#ff0000";
-                    e.target.style.color = "#fefefe";
-                  }}
-                  onMouseLeave={(e) => {
-                    e.target.style.background = "#131313";
-                    e.target.style.color = "#ff0000";
-                  }}
-                >
-                  Looking For Foe
-                </button>
-                <button 
-                  onClick={() => setActiveFilter('selling-tickets')}
-                  style={{ 
-                    background: activeFilter === 'selling-tickets' ? '#ff0000' : '#131313', 
-                    color: activeFilter === 'selling-tickets' ? '#fefefe' : '#ff0000', 
-                    border: "1px solid #ff0000", 
-                    borderRadius: 4, 
-                    padding: "4px 8px", 
-                    cursor: "pointer",
-                    fontSize: "12px",
-                    transition: "all 0.2s ease"
-                  }}
-                  onMouseEnter={(e) => {
-                    e.target.style.background = "#ff0000";
-                    e.target.style.color = "#fefefe";
-                  }}
-                  onMouseLeave={(e) => {
-                    e.target.style.background = "#131313";
-                    e.target.style.color = "#ff0000";
-                  }}
-                >
-                  DaPaint Tickets
-                </button>
-              </div>
-              <div style={{ display: "flex", gap: "8px" }}>
-                <button 
-                  onClick={handleFilterClick}
-                  style={{ 
-                    background: "#ff0000", 
-                    color: "#fefefe", 
-                    border: "none", 
-                    borderRadius: 4, 
-                    padding: "4px 12px", 
-                    cursor: "pointer",
-                    transition: "all 0.2s ease"
-                  }}
-                  aria-label="Filter DaPaint"
-                  title="Filter DaPaint"
-                  className="header-action-btn filter-btn"
-                >
-                  <span className="header-btn-text">🔍</span>
-                  <span className="header-btn-label">Filter DaPaint</span>
-                </button>
-                <button 
-                  onClick={handleCreateClick}
-                  style={{ 
-                    background: "#ff0000", 
-                    color: "#fefefe", 
-                    border: "none", 
-                    borderRadius: 4, 
-                    padding: "4px 12px",
-                    cursor: "pointer",
-                    transition: "all 0.2s ease"
-                  }}
-                  aria-label="Create a DaPaint"
-                  title="Create a DaPaint"
-                  className="header-action-btn create-btn"
-                >
-                  <span className="header-btn-text">➕</span>
-                  <span className="header-btn-label">Create a DaPaint</span>
-                </button>
-              </div>
-            </div>
-
-            {/* Auto-scrolling DaPaint matches */}
-            <div style={{ position: "relative", width: "100%" }}>
-              {/* Fade effect overlays - now outside the scroll container */}
-              <div style={{
-                position: "absolute",
-                left: 0,
-                top: 0,
-                bottom: 0,
-                width: "60px",
-                background: "linear-gradient(to right, #131313 0%, transparent 100%)",
-                pointerEvents: "none",
-                zIndex: 2,
-              }} />
-              <div style={{
-                position: "absolute",
-                right: 0,
-                top: 0,
-                bottom: 0,
-                width: "60px",
-                background: "linear-gradient(to left, #131313 0%, transparent 100%)",
-                pointerEvents: "none",
-                zIndex: 2,
-              }} />
-              <div
-                ref={scrollRef}
-                style={{
-                  display: "flex",
-                  overflowX: "auto",
-                  gap: 16,
-                  padding: "24px 16px",
-                  width: "100%",
-                  boxSizing: "border-box",
-                  marginTop: 16,
-                  scrollbarWidth: "none", // Firefox
-                  msOverflowStyle: "none", // IE/Edge
-                  WebkitScrollbar: { display: "none" }, // Chrome/Safari
-                  position: "relative",
-                }}
-                onMouseEnter={() => {
-                  if (scrollIntervalRef.current) {
-                    clearInterval(scrollIntervalRef.current);
-                  }
-                }}
-                onMouseLeave={() => {
-                  scrollIntervalRef.current = setInterval(() => {
-                    if (scrollRef.current) {
-                      const container = scrollRef.current;
-                      container.scrollLeft += 2;
-                      if (container.scrollLeft >= container.scrollWidth - container.clientWidth) {
-                        container.scrollLeft = 0;
-                      }
-                    }
-                  }, 50);
-                }}
-              >
-                {filteredMatches.map((match) => (
-                  <div key={match.id} style={{ flex: "0 0 auto" }}>
-                    <HostMatchCard
-                      match={match}
-                      onLockIn={(match) => alert(`Locking in to ${match.title}`)}
-                      onBuyTicket={(match) => alert(`Buying ticket for ${match.title}`)}
-                      currentUser={{ id: 99 }}
-                    />
-                  </div>
-                ))}
-              </div>
-            </div>
-          </>
-        )}
+        {/* Removed Upcoming DaPaint and leaderboard ad. Now only in Home.jsx */}
       </header>
 
       {/* Main content */}
-      <main style={{ 
-        minHeight: "calc(100vh - 120px)", 
-        padding: "24px",
-        paddingBottom: isAuthenticated ? "80px" : "24px"
-      }}>
-        <Outlet />
-      </main>
+      <Outlet />
 
       {/* Bottom Navigation - Only for authenticated users */}
       {isAuthenticated && (
@@ -821,7 +630,8 @@ const Layout = () => {
           alignItems: "center", 
           justifyContent: "space-around",
           zIndex: 100,
-          boxShadow: "0 -2px 8px rgba(0,0,0,0.3)"
+          boxShadow: "0 -2px 8px rgba(0,0,0,0.3)",
+          flexShrink: 0
         }}>
           <button 
             onClick={() => navigate("/")}
@@ -836,20 +646,6 @@ const Layout = () => {
             }}
           >
             🏠 Home
-          </button>
-          <button 
-            onClick={handleChatClick}
-            style={{ 
-              background: "none", 
-              border: "none", 
-              color: location.pathname === "/chat" ? "#ff0000" : "#fefefe", 
-              cursor: "pointer",
-              fontSize: 12,
-              fontWeight: location.pathname === "/chat" ? "bold" : "normal",
-              transition: "all 0.2s ease"
-            }}
-          >
-            💬 Chat
           </button>
           <button 
             onClick={handleProductClick}

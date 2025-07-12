@@ -13,7 +13,6 @@ import Product from "./pages/Product";
 import DaPaintCreate from "./pages/DaPaintCreate";
 import DaPaintSubmit from "./pages/DaPaintSubmit";
 import DaPaintFilter from "./pages/DaPaintFilter";
-import Chat from "./pages/Chat";
 import Profile from "./pages/Profile";
 import Notifications from "./pages/Notifications";
 import Feedback from "./pages/Feedback";
@@ -33,7 +32,6 @@ export const router = createBrowserRouter(
       <Route path="/create" element={<DaPaintCreate />} />
       <Route path="/submit" element={<DaPaintSubmit />} />
       <Route path="/filter" element={<DaPaintFilter />} />
-      <Route path="/chat" element={<Chat />} />
       <Route path="/profile" element={<Profile />} />
       <Route path="/notifications" element={<Notifications />} />
       <Route path="/feedback" element={<Feedback />} />

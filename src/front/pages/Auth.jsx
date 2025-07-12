@@ -111,18 +111,18 @@ const Auth = () => {
         <div style={{ background: "#222", padding: 32, borderRadius: 8, minWidth: 320 }}>
           <h2 style={{ color: "#ff0000" }}>Login</h2>
           <label style={{ display: "block", margin: "16px 0 8px" }}>Username / Email / Phone</label>
-          <input
+              <input
             type="text"
             name="user"
             value={login.user}
             onChange={handleLoginChange}
             placeholder="e.g. ballplayer23 or you@email.com or 555-123-4567"
             style={{ width: "100%", padding: 8, borderRadius: 4, border: "1px solid #444", marginBottom: 8 }}
-          />
+              />
           <label style={{ display: "block", margin: "16px 0 8px" }}>Password</label>
-          <input
-            type="password"
-            name="password"
+              <input
+                type="password"
+                name="password"
             value={login.password}
             onChange={handleLoginChange}
             placeholder="Enter your password"
