@@ -15,13 +15,6 @@ const mockMatches = [
   { id: 6, title: "MGM Gran", date: "Jul 25", time: "2:00 PM", sport: "🏓", price: 5000, ticket: true },
   { id: 7, title: "LES Skat", date: "Aug 1", time: "2:00 PM", sport: "🛹", price: null, ticket: false },
   { id: 8, title: "1260 NW 100th Terr", date: "Jul 22", time: "2:00 PM", sport: "🏓", price: null, ticket: false },
-  { id: 9, title: "Arthur A", date: "Jul 21", time: "2:00 PM", sport: "🏀", price: 150, ticket: true },
-  { id: 10, title: "Venice B", date: "Jul 20", time: "2:00 PM", sport: "🏀", price: null, ticket: false },
-  { id: 11, title: "Iron Gym", date: "Aug 18", time: "2:00 PM", sport: "🥊", price: 550, ticket: true },
-  { id: 12, title: "Park Fie", date: "Aug 17", time: "2:00 PM", sport: "⚽", price: 100, ticket: false },
-  { id: 13, title: "Downtown", date: "Aug 19", time: "2:00 PM", sport: "🥊", price: null, ticket: false },
-  { id: 14, title: "City Ten", date: "Aug 20", time: "2:00 PM", sport: "🎾", price: 75, ticket: true },
-  { id: 15, title: "1260 NW 100th Terr", date: "Aug 1", time: "2:00 PM", sport: "🛹", price: null, ticket: false },
 ];
 
 const mockChat = [
@@ -41,47 +34,48 @@ const mockLeaderboard = [
 
 const Home = () => {
   const carouselRef = useRef(null);
-  const animationRef = useRef(null);
   const [isHovered, setIsHovered] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const [startX, setStartX] = useState(0);
-  const [currentTranslate, setCurrentTranslate] = useState(0);
+  const [translateX, setTranslateX] = useState(0);
   const [chatInput, setChatInput] = useState("");
   const [chat, setChat] = useState(mockChat);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  const [activeTab, setActiveTab] = useState('chat'); // 'chat' or 'leaderboard'
 
-  // Calculate card width including gap
+  // Handle window resize
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  // Calculate dimensions for seamless infinite scroll
   const cardWidth = 260 + 12; // card width + gap
   const totalCards = mockMatches.length;
-  const totalWidth = totalCards * cardWidth;
+  const singleSetWidth = totalCards * cardWidth;
 
-  // Continuous loop animation with seamless transitions
+  // Perfect orbital animation - like Earth rotating
   useEffect(() => {
     let animationId;
-    let lastTime = performance.now();
     
-    const animate = (currentTime) => {
+    const animate = () => {
       if (!isHovered && !isDragging) {
-        const deltaTime = currentTime - lastTime;
-        const speed = 0.05; // pixels per millisecond
-        
-        setCurrentTranslate(prev => {
-          let newTranslate = prev - (deltaTime * speed);
+        setTranslateX(prev => {
+          // Smooth continuous movement
+          let newTranslate = prev - 0.8; // Constant orbital speed
           
-          // Seamless wrapping using modulo - no visible jumps
-          // When we've moved one full set width, reset to 0
-          if (newTranslate <= -totalWidth) {
-            newTranslate = newTranslate + totalWidth;
-          }
-          // When dragging backwards past 0, wrap to negative end
-          else if (newTranslate > 0) {
-            newTranslate = newTranslate - totalWidth;
+          // Seamless loop when we complete one full orbit
+          if (Math.abs(newTranslate) >= singleSetWidth) {
+            return 0; // Reset to start position for perfect loop
           }
           
           return newTranslate;
         });
       }
       
-      lastTime = currentTime;
       animationId = requestAnimationFrame(animate);
     };
     
@@ -92,68 +86,49 @@ const Home = () => {
         cancelAnimationFrame(animationId);
       }
     };
-  }, [isHovered, isDragging, totalWidth]);
+  }, [isHovered, isDragging, singleSetWidth]);
 
-  // Pause on hover
+  // Mouse and touch event handlers
   const handleMouseEnter = () => setIsHovered(true);
   const handleMouseLeave = () => setIsHovered(false);
 
-  // Drag to scroll with wrapping
-  const handleMouseDown = (e) => {
+  const handleStart = (clientX) => {
     setIsDragging(true);
-    setStartX(e.clientX);
+    setStartX(clientX);
   };
 
+  const handleMove = (clientX) => {
+    if (!isDragging) return;
+    
+    const deltaX = clientX - startX;
+    setTranslateX(prev => {
+      let newTranslate = prev + deltaX * 0.8; // Smooth dragging
+      
+      // Keep within bounds for seamless experience
+      if (newTranslate > 0) {
+        newTranslate = -(singleSetWidth - Math.abs(newTranslate));
+      } else if (Math.abs(newTranslate) >= singleSetWidth) {
+        newTranslate = -(Math.abs(newTranslate) - singleSetWidth);
+      }
+      
+      return newTranslate;
+    });
+    
+    setStartX(clientX);
+  };
+
+  const handleEnd = () => setIsDragging(false);
+
+  // Mouse events
+  const handleMouseDown = (e) => handleStart(e.clientX);
   const handleMouseMove = (e) => {
-    if (!isDragging) return;
     e.preventDefault();
-    const deltaX = e.clientX - startX;
-    
-    setCurrentTranslate(prev => {
-      let newTranslate = prev + deltaX;
-      
-      // Apply same wrapping logic during drag
-      if (newTranslate <= -totalWidth) {
-        newTranslate = newTranslate + totalWidth;
-      } else if (newTranslate > 0) {
-        newTranslate = newTranslate - totalWidth;
-      }
-      
-      return newTranslate;
-    });
-    
-    setStartX(e.clientX);
+    handleMove(e.clientX);
   };
 
-  const handleMouseUp = () => setIsDragging(false);
-
-  // Touch events for mobile with wrapping
-  const handleTouchStart = (e) => {
-    setIsDragging(true);
-    setStartX(e.touches[0].clientX);
-  };
-
-  const handleTouchMove = (e) => {
-    if (!isDragging) return;
-    const deltaX = e.touches[0].clientX - startX;
-    
-    setCurrentTranslate(prev => {
-      let newTranslate = prev + deltaX;
-      
-      // Apply same wrapping logic during touch
-      if (newTranslate <= -totalWidth) {
-        newTranslate = newTranslate + totalWidth;
-      } else if (newTranslate > 0) {
-        newTranslate = newTranslate - totalWidth;
-      }
-      
-      return newTranslate;
-    });
-    
-    setStartX(e.touches[0].clientX);
-  };
-
-  const handleTouchEnd = () => setIsDragging(false);
+  // Touch events
+  const handleTouchStart = (e) => handleStart(e.touches[0].clientX);
+  const handleTouchMove = (e) => handleMove(e.touches[0].clientX);
 
   const handleSend = (e) => {
     e.preventDefault();
@@ -163,105 +138,97 @@ const Home = () => {
   };
 
   return (
-    <div className="main-container" style={{ height: "100vh", display: "flex", flexDirection: "column", background: "#fefefe" }}>
-      <div style={{ position: "absolute", top: 2, left: 2, fontSize: 10, color: "#999", zIndex: 1000 }}>MAIN CONTAINER</div>
+    <div style={styles.mainContainer}>
+      
       {/* Live DaPaint Pills Row */}
-      <div className="live-dapaint-section" style={{ height: MATCHES_HEIGHT + 68, background: "#18191c", padding: "1px", borderBottom: "1.5px solid #23272f", display: "flex", flexDirection: "column", justifyContent: "center", marginTop: 24, marginBottom: 18, position: "relative" }}>
-        <div style={{ position: "absolute", top: 2, left: 2, fontSize: 10, color: "#999", zIndex: 1000 }}>LIVE DAPAINT SECTION</div>
-        <div className="button-row" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", height: 68, margin: "8px 0 4px 0", position: "relative" }}>
-          <div style={{ position: "absolute", top: 2, left: 2, fontSize: 10, color: "#999", zIndex: 1000 }}>BUTTON ROW</div>
+      <div style={styles.liveDaPaintSection}>
+        
+        <div style={styles.buttonRow}>
+          
           {/* Left group */}
-          <div className="left-button-group" style={{ display: "flex", gap: 8, position: "relative" }}>
-            <div style={{ position: "absolute", top: -10, left: 2, fontSize: 8, color: "#999", zIndex: 1000 }}>LEFT BUTTONS</div>
-            <button className="filter-button" style={{ background: "#23272f", color: "#fff", border: "none", borderRadius: 8, padding: "6px 16px", fontWeight: 700, fontSize: 13, cursor: "pointer" }}>🪠Filter DaPaint</button>
-            <button className="create-button" style={{ background: "#23272f", color: "#fff", border: "none", borderRadius: 8, padding: "6px 16px", fontWeight: 700, fontSize: 13, cursor: "pointer" }}>➕Create A DaPaint</button>
+          <div style={styles.leftButtonGroup}>
+            <button style={styles.filterButton}>🪠Filter DaPaint</button>
+            <button style={styles.createButton}>➕Create A DaPaint</button>
           </div>
+          
           {/* Right group */}
-          <div className="right-button-group" style={{ display: "flex", gap: 8, position: "relative" }}>
-            <div style={{ position: "absolute", top: -10, right: 2, fontSize: 8, color: "#999", zIndex: 1000 }}>RIGHT BUTTONS</div>
-            <button className="all-button" style={{ background: "#23272f", color: "#fff", border: "none", borderRadius: 8, padding: "6px 16px", fontWeight: 700, fontSize: 13, cursor: "pointer" }}>🏁ALL</button>
-            <button className="foe-button" style={{ background: "#23272f", color: "#fff", border: "none", borderRadius: 8, padding: "6px 16px", fontWeight: 700, fontSize: 13, cursor: "pointer" }}>💢Looking For Foe</button>
-            <button className="tickets-button" style={{ background: "#23272f", color: "#fff", border: "none", borderRadius: 8, padding: "6px 16px", fontWeight: 700, fontSize: 13, cursor: "pointer" }}>🎟️Selling Tickets</button>
+          <div style={styles.rightButtonGroup}>
+            <button style={styles.allButton}>🏁ALL</button>
+            <button style={styles.foeButton}>💢Looking For Foe</button>
+            <button style={styles.ticketsButton}>🎟️Selling Tickets</button>
           </div>
         </div>
-        {/* Infinite Carousel Container */}
+        
+        {/* Perfect Orbital Carousel */}
         <div
-          className="match-cards-container"
           style={{
-            overflow: "hidden",
-            padding: "28px 0",
-            height: 'auto',
-            minHeight: 150,
-            position: "relative",
-            cursor: isDragging ? "grabbing" : "grab",
-            userSelect: "none"
+            ...styles.matchCardsContainer,
+            cursor: isDragging ? 'grabbing' : 'grab'
           }}
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
           onMouseDown={handleMouseDown}
           onMouseMove={handleMouseMove}
-          onMouseUp={handleMouseUp}
+          onMouseUp={handleEnd}
+          onMouseLeave={handleEnd}
           onTouchStart={handleTouchStart}
           onTouchMove={handleTouchMove}
-          onTouchEnd={handleTouchEnd}
+          onTouchEnd={handleEnd}
         >
-          <div style={{ position: "absolute", top: 2, left: 2, fontSize: 10, color: "#999", zIndex: 1000 }}>MATCH CARDS CONTAINER</div>
-          {/* Carousel Track - Continuous loop with duplicated cards */}
+          
+          {/* Infinite Orbital Track */}
           <div
             ref={carouselRef}
-            className="carousel-track"
             style={{
-              display: "flex",
-              gap: 12,
-              transform: `translateX(${currentTranslate}px)`,
-              transition: isDragging ? "none" : "transform 0.1s ease-out",
-              width: "fit-content",
-              position: "relative"
+              ...styles.carouselTrack,
+              transform: `translateX(${translateX}px)`,
+              transition: isDragging ? 'none' : 'none' // No transition for perfect smooth orbit
             }}
           >
-            <div style={{ position: "absolute", top: 2, left: 2, fontSize: 10, color: "#999", zIndex: 1000 }}>CAROUSEL TRACK</div>
-            {/* Duplicate cards for seamless infinite loop */}
+            
+            {/* Duplicate sets for seamless infinite orbital loop */}
             {[...mockMatches, ...mockMatches].map((m, i) => {
               const originalIndex = i % mockMatches.length;
               const hostAvatar = "https://randomuser.me/api/portraits/men/" + ((originalIndex % 5) + 1) + ".jpg";
               const foeAvatar = "https://randomuser.me/api/portraits/women/" + ((originalIndex % 5) + 1) + ".jpg";
               const isVS = m.ticket;
+              
               return (
-                <div key={i} className="individual-match-card" style={{
-                  background: "#23272f",
-                  borderRadius: 10,
-                  minWidth: 260,
-                  maxWidth: 260,
-                  height: 69,
-                  color: "#fff",
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  boxShadow: "0 1px 4px 0 rgba(0,0,0,0.07)",
-                  padding: "21px 21px 21px 21px",
-                  fontSize: 13,
-                  border: "1.5px solid #23272f",
-                  position: "relative",
-                  flexShrink: 0
-                }}>
-                  <div style={{ position: "absolute", top: 2, left: 2, fontSize: 8, color: "#999", zIndex: 1000 }}>MATCH CARD {originalIndex+1}</div>
-                  <div className="match-card-header" style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: isVS ? 8 : 0, marginBottom: 2 }}>
-                    <img className="host-avatar" src={hostAvatar} alt="Host" style={{ width: 24, height: 24, borderRadius: "50%", border: "1.5px solid #18191c", background: "#fff", objectFit: "cover" }} />
-                    {isVS && <span className="vs-text" style={{ fontWeight: 700, fontSize: 13, margin: "0 4px" }}>vs</span>}
-                    {isVS && <img className="foe-avatar" src={foeAvatar} alt="Foe" style={{ width: 24, height: 24, borderRadius: "50%", border: "1.5px solid #18191c", background: "#fff", objectFit: "cover" }} />}
-                    <span className="match-date-time" style={{ fontWeight: 700, fontSize: 13, marginLeft: 8 }}>{m.date} {m.time}</span>
+                <div key={`${m.id}-${i}`} style={styles.individualMatchCard}>
+                  
+                  <div style={{
+                    ...styles.matchCardHeader,
+                    gap: isVS ? '8px' : '0'
+                  }}>
+                    <img style={styles.hostAvatar} src={hostAvatar} alt="Host" />
+                    {isVS && <span style={styles.vsText}>vs</span>}
+                    {isVS && <img style={styles.foeAvatar} src={foeAvatar} alt="Foe" />}
+                    <span style={styles.matchDateTime}>{m.date} {m.time}</span>
                   </div>
-                  <div className="match-card-details" style={{ display: "flex", alignItems: "center", gap: 4, fontSize: 12, color: "#aaa", marginBottom: 2 }}>
-                    <span className="sport-icon">{m.sport}</span>
-                    <span className="location-name">{m.title}</span>
+                  
+                  <div style={styles.matchCardDetails}>
+                    <span style={styles.sportIcon}>{m.sport}</span>
+                    <span style={styles.locationName}>{m.title}</span>
                   </div>
+                  
                   {isVS ? (
-                    <button className="ticket-button" style={{ background: "#fefefe", color: "#131313", border: "none", borderRadius: 8, padding: "8px 22px", fontWeight: 700, fontSize: 15, marginTop: 12, cursor: "pointer", display: "flex", alignItems: "center", gap: 4, pointerEvents: isDragging ? 'none' : 'auto' }}>
+                    <button 
+                      style={{
+                        ...styles.ticketButton,
+                        opacity: isDragging ? 0.7 : 1,
+                        pointerEvents: isDragging ? 'none' : 'auto'
+                      }}
+                    >
                       🎟️ ${m.price}
                     </button>
                   ) : (
-                    <button className="lock-in-button" style={{ background: "#ff0000", color: "#fff", border: "none", borderRadius: 8, padding: "8px 22px", fontWeight: 700, fontSize: 15, marginTop: 12, cursor: "pointer", pointerEvents: isDragging ? 'none' : 'auto' }}>
+                    <button 
+                      style={{
+                        ...styles.lockInButton,
+                        opacity: isDragging ? 0.7 : 1,
+                        pointerEvents: isDragging ? 'none' : 'auto'
+                      }}
+                    >
                       Lock In DaPaint
                     </button>
                   )}
@@ -271,140 +238,618 @@ const Home = () => {
           </div>
         </div>
       </div>
+      
       {/* Nike Ad Banner */}
-      <div 
-        className="nike-ad-banner"
-        style={{
-          height: AD_HEIGHT,
-          background: "linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('https://images.unsplash.com/photo-1542291026-7eec264c27ff?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80')",
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          color: "#fff",
-          borderRadius: 10,
-          padding: "8px 18px",
-          fontWeight: 800,
-          fontSize: 18,
-          display: "flex",
-          alignItems: "center",
-          gap: 16,
-          border: "2.5px solid #fff",
-          boxShadow: "0 4px 24px 0 rgba(0,0,0,0.3)",
-          margin: "8px 0 12px 0",
-          position: "relative",
-          transition: "transform 0.18s cubic-bezier(.4,2,.6,1), box-shadow 0.18s",
-          cursor: "pointer"
-        }}
-      >
-        <div style={{ position: "absolute", top: 2, left: 2, fontSize: 10, color: "#fff", zIndex: 1000 }}>NIKE AD BANNER</div>
+      <div style={styles.nikeAdBanner}>
         <img 
-          className="nike-logo"
+          style={styles.nikeLogo}
           src="https://upload.wikimedia.org/wikipedia/commons/a/a6/Logo_NIKE.svg" 
           alt="Nike" 
-          style={{ 
-            width: 32, 
-            height: 32, 
-            marginRight: 12, 
-            animation: "nikePulse 1.2s infinite alternate" 
-          }} 
         />
-        <div className="nike-ad-content">
-          <div className="nike-ad-title" style={{ fontWeight: 900, fontSize: 20, letterSpacing: 1 }}>The Future is Here.</div>
-          <div className="nike-ad-subtitle" style={{ fontWeight: 500, fontSize: 13, color: "#fff", opacity: 0.92 }}>Nike Adapt Auto Max. Now Available.</div>
+        <div style={styles.nikeAdContent}>
+          <div style={styles.nikeAdTitle}>The Future is Here.</div>
+          <div style={styles.nikeAdSubtitle}>Nike Adapt Auto Max. Now Available.</div>
         </div>
       </div>
-      <style>{`
-        .nike-ad-banner:hover {
-          transform: scale(1.04);
-          box-shadow: 0 8px 32px 0 rgba(255,0,0,0.28);
-        }
-        @keyframes nikePulse {
-          0% { filter: brightness(1) drop-shadow(0 0 0 #fff); }
-          100% { filter: brightness(1.2) drop-shadow(0 0 12px #fff); }
-        }
-      `}</style>
+      
+      {/* Mobile Toggle Tabs */}
+      {isMobile && (
+        <div style={styles.mobileTabContainer}>
+          <button 
+            style={{
+              ...styles.mobileTab,
+              ...(activeTab === 'chat' ? styles.mobileTabActive : {})
+            }}
+            onClick={() => setActiveTab('chat')}
+          >
+            💬 Chat
+          </button>
+          <button 
+            style={{
+              ...styles.mobileTab,
+              ...(activeTab === 'leaderboard' ? styles.mobileTabActive : {})
+            }}
+            onClick={() => setActiveTab('leaderboard')}
+          >
+            🏆 Leaderboard
+          </button>
+        </div>
+      )}
+      
       {/* Main Content Split */}
-      <div className="main-content-container" style={{ height: 'calc(100vh - 410px)', minHeight: 0, display: "flex", gap: 18, alignItems: "flex-start", background: "#fefefe", padding: "12px 16px 0 16px", overflow: "hidden", position: "relative" }}>
-        <div style={{ position: "absolute", top: 2, left: 2, fontSize: 10, color: "#999", zIndex: 1000 }}>MAIN CONTENT CONTAINER</div>
+      <div style={{
+        ...styles.mainContentContainer,
+        ...(isMobile ? styles.mainContentContainerMobile : {})
+      }}>
+        
         {/* DaPaint Chat */}
-        <div className="chat-container" style={{ flex: 2.5, background: "#18191c", borderRadius: 12, padding: 0, minHeight: 0, display: "flex", flexDirection: "column", height: "100%", fontSize: 15, boxShadow: "0 1px 4px 0 rgba(0,0,0,0.10)", position: "relative" }}>
-          <div style={{ position: "absolute", top: 2, left: 2, fontSize: 10, color: "#999", zIndex: 1000 }}>CHAT CONTAINER</div>
-          <div className="chat-header" style={{ color: "#ff4d4f", fontWeight: 700, fontSize: 16, margin: "16px 0 8px 16px", display: "flex", alignItems: "center", gap: 8 }}>
+        <div style={{
+          ...styles.chatContainer,
+          ...(isMobile && activeTab !== 'chat' ? { display: 'none' } : {}),
+          ...(isMobile ? styles.chatContainerMobile : {})
+        }}>
+          <div style={styles.chatHeader}>
             <span role="img" aria-label="chat">💬</span> DaPaint Chat
           </div>
-          <div className="chat-messages-container" style={{ flex: 1, overflowY: "auto", minHeight: 0, padding: "0 0 8px 0", display: "flex", flexDirection: "column", gap: 0, position: "relative" }}>
-            <div style={{ position: "absolute", top: 2, left: 2, fontSize: 8, color: "#999", zIndex: 1000 }}>CHAT MESSAGES</div>
-            {chat.map((msg, idx) => {
-              // Assign a unique color per user (simple hash)
+          <div style={styles.chatMessagesContainer}>
+            {chat.map((msg) => {
               const userColors = ["#ff4d4f", "#1e90ff", "#ffb300", "#20c997", "#cd7f32", "#b3b3b3", "#6f42c1"];
               const colorIdx = Math.abs([...msg.user].reduce((a, c) => a + c.charCodeAt(0), 0)) % userColors.length;
               const userColor = userColors[colorIdx];
               return (
-                <div key={msg.id} className="chat-message" style={{ display: "flex", alignItems: "center", gap: 10, width: "100%", padding: "4px 0 2px 16px" }}>
-                  <img className="chat-user-avatar" src={`https://randomuser.me/api/portraits/${msg.user === 'Morgan' ? 'men/4' : msg.user === 'Jordan' ? 'men/2' : 'women/3'}.jpg`} alt={msg.user} style={{ width: 24, height: 24, borderRadius: "50%", border: "1.5px solid #23272f", background: "#23272f", objectFit: "cover" }} />
-                  <span className="chat-username" style={{ fontWeight: 700, color: userColor, marginRight: 6, fontSize: 15, textShadow: "0 1px 2px #0008" }}>{msg.user}</span>
-                  <span className="chat-message-text" style={{ color: "#fff", fontWeight: 400, fontSize: 15, textShadow: "0 1px 2px #0008" }}>{msg.text}</span>
+                <div key={msg.id} style={styles.chatMessage}>
+                  <img 
+                    style={styles.chatUserAvatar} 
+                    src={`https://randomuser.me/api/portraits/${msg.user === 'Morgan' ? 'men/4' : msg.user === 'Jordan' ? 'men/2' : 'women/3'}.jpg`} 
+                    alt={msg.user} 
+                  />
+                  <span style={{...styles.chatUsername, color: userColor}}>{msg.user}</span>
+                  <span style={styles.chatMessageText}>{msg.text}</span>
                 </div>
               );
             })}
           </div>
-          <form className="chat-input-form" onSubmit={handleSend} style={{ display: "flex", alignItems: "center", gap: 0, background: "#232c3a", borderRadius: "0 0 12px 12px", padding: 0, margin: 0, marginBottom: 12, position: "relative" }}>
-            <div style={{ position: "absolute", top: 2, left: 2, fontSize: 8, color: "#999", zIndex: 1000 }}>CHAT INPUT FORM</div>
+          <div style={styles.chatInputForm}>
             <input
-              className="chat-input-field"
+              style={styles.chatInputField}
               type="text"
               value={chatInput}
               onChange={e => setChatInput(e.target.value)}
+              onKeyDown={e => e.key === 'Enter' && handleSend(e)}
               placeholder="Join the conversation..."
-              style={{ flex: 1, background: "#232c3a", color: "#fff", border: "none", borderRadius: "0 0 0 12px", padding: "16px 18px", fontSize: 15, outline: "none" }}
             />
-            <button className="chat-send-button" type="submit" style={{ background: "#ff0000", color: "#fff", border: "none", borderRadius: "0 0 12px 0", padding: "0 24px", fontWeight: 700, fontSize: 22, height: 56, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", transition: "background 0.2s" }}>➤</button>
-          </form>
+            <button style={styles.chatSendButton} type="button" onClick={handleSend}>🏹</button>
+          </div>
         </div>
+        
         {/* Top Players Leaderboard */}
-        <div className="leaderboard-container" style={{ flex: 1, background: "#18191c", borderRadius: 12, padding: 0, minHeight: 0, display: "flex", flexDirection: "column", height: "100%", fontSize: 13, boxShadow: "0 1px 4px 0 rgba(0,0,0,0.10)", position: "relative" }}>
-          <div style={{ position: "absolute", top: 2, left: 2, fontSize: 10, color: "#999", zIndex: 1000 }}>LEADERBOARD CONTAINER</div>
-          <div className="leaderboard-header" style={{ color: "#ff4d4f", fontWeight: 700, fontSize: 16, margin: "16px 0 8px 16px", display: "flex", alignItems: "center", gap: 8 }}>
+        <div style={{
+          ...styles.leaderboardContainer,
+          ...(isMobile && activeTab !== 'leaderboard' ? { display: 'none' } : {}),
+          ...(isMobile ? styles.leaderboardContainerMobile : {})
+        }}>
+          <div style={styles.leaderboardHeader}>
             <span role="img" aria-label="trophy">🏆</span> Top Players
           </div>
-          <div className="leaderboard-players-list" style={{ flex: 1, minHeight: 0, overflowY: "auto", display: "flex", flexDirection: "column", gap: 10, padding: "0 12px 12px 12px", position: "relative" }}>
-            <div style={{ position: "absolute", top: 2, left: 2, fontSize: 8, color: "#999", zIndex: 1000 }}>PLAYERS LIST</div>
+          <div style={styles.leaderboardPlayersList}>
             {mockLeaderboard.map((p, i) => (
-              <div key={p.id} className="leaderboard-player-card" style={{ background: "#23272f", color: "#fff", borderRadius: 8, padding: "10px 12px", fontWeight: 600, display: "flex", alignItems: "center", gap: 10, fontSize: 13, boxShadow: i < 3 ? "0 2px 8px 0 rgba(255,0,0,0.08)" : undefined }}>
-                <img className="player-avatar" src={p.avatar} alt={p.name} style={{ width: 32, height: 32, borderRadius: "50%", marginRight: 8, border: i < 3 ? "2px solid #ff0000" : "2px solid #23272f" }} />
-                <span className="player-rank" style={{ color: i === 0 ? "#ffb300" : i === 1 ? "#b3b3b3" : i === 2 ? "#cd7f32" : "#fff", fontWeight: 700, fontSize: 16, width: 24, display: "inline-block", textAlign: "center" }}>{i === 0 ? "🥇" : i === 1 ? "🥈" : i === 2 ? "🥉" : `#${i+1}`}</span>
-                <span className="player-name" style={{ flex: 1, fontWeight: 700 }}>{p.name}</span>
-                <span className="player-wins" style={{ color: "#aaa", fontWeight: 400, fontSize: 13 }}>{p.wins} wins</span>
+              <div key={p.id} style={styles.leaderboardPlayerCard}>
+                <img style={styles.playerAvatar} src={p.avatar} alt={p.name} />
+                <span style={{
+                  ...styles.playerRank,
+                  color: i === 0 ? '#ffd700' : i === 1 ? '#c0c0c0' : i === 2 ? '#cd7f32' : '#fff'
+                }}>
+                  {i === 0 ? "🥇" : i === 1 ? "🥈" : i === 2 ? "🥉" : `#${i+1}`}
+                </span>
+                <span style={styles.playerName}>{p.name}</span>
+                <span style={styles.playerWins}>{p.wins} wins</span>
               </div>
             ))}
           </div>
         </div>
       </div>
+      
       {/* Bottom Navigation */}
-      <nav className="bottom-navigation" style={{ height: NAV_HEIGHT, position: "fixed", left: 0, right: 0, bottom: 0, background: "#18191c", borderTop: "1.5px solid #23272f", display: "flex", justifyContent: "space-around", alignItems: "center", zIndex: 100 }}>
-        <div style={{ position: "absolute", top: 2, left: 2, fontSize: 10, color: "#999", zIndex: 1000 }}>BOTTOM NAVIGATION</div>
-        <button className="nav-home-button" style={{ background: "none", border: "none", color: "#fff", fontWeight: 600, fontSize: 13, display: "flex", flexDirection: "column", alignItems: "center", gap: 1, cursor: "pointer" }}>
+      <nav style={styles.bottomNavigation}>
+        <button style={styles.navButton}>
           <span role="img" aria-label="home">🏠</span>
-          <span style={{ fontSize: 10 }}>Home</span>
+          <span style={styles.navButtonText}>Home</span>
         </button>
-        <button className="nav-chat-button" style={{ background: "none", border: "none", color: "#fff", fontWeight: 600, fontSize: 13, display: "flex", flexDirection: "column", alignItems: "center", gap: 1, cursor: "pointer" }}>
+        <button style={styles.navButton}>
           <span role="img" aria-label="chat">💬</span>
-          <span style={{ fontSize: 10 }}>Chat</span>
+          <span style={styles.navButtonText}>Chat</span>
         </button>
-        <button className="nav-stats-button" style={{ background: "none", border: "none", color: "#fff", fontWeight: 600, fontSize: 13, display: "flex", flexDirection: "column", alignItems: "center", gap: 1, cursor: "pointer" }}>
+        <button style={styles.navButton}>
           <span role="img" aria-label="stats">📊</span>
-          <span style={{ fontSize: 10 }}>Stats</span>
+          <span style={styles.navButtonText}>Stats</span>
         </button>
-        <button className="nav-profile-button" style={{ background: "none", border: "none", color: "#fff", fontWeight: 600, fontSize: 13, display: "flex", flexDirection: "column", alignItems: "center", gap: 1, cursor: "pointer" }}>
+        <button style={styles.navButton}>
           <span role="img" aria-label="profile">👤</span>
-          <span style={{ fontSize: 10 }}>Profile</span>
+          <span style={styles.navButtonText}>Profile</span>
         </button>
       </nav>
-      {/* Hide scrollbar for all browsers */}
-      <style jsx>{`
-        div[ref="carouselRef"]::-webkit-scrollbar { display: none; }
-      `}</style>
     </div>
   );
+};
+
+const styles = {
+  mainContainer: {
+    minHeight: '100vh',
+    background: '#0d1117',
+    color: '#fff',
+    fontFamily: 'system-ui, -apple-system, sans-serif',
+    display: 'flex',
+    flexDirection: 'column'
+  },
+  
+  // Live DaPaint Section
+  liveDaPaintSection: {
+    height: 'calc(90px + 68px)',
+    background: '#18191c',
+    padding: '1px',
+    borderBottom: '1.5px solid #23272f',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    marginTop: '24px',
+    marginBottom: '18px',
+    position: 'relative'
+  },
+  
+  // Button Row
+  buttonRow: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    height: '68px',
+    margin: '8px 0 4px 0',
+    position: 'relative',
+    padding: '0 16px'
+  },
+  
+  leftButtonGroup: {
+    display: 'flex',
+    gap: '8px',
+    position: 'relative'
+  },
+  
+  rightButtonGroup: {
+    display: 'flex',
+    gap: '8px',
+    position: 'relative'
+  },
+  
+  // Buttons
+  filterButton: {
+    background: '#131313',
+    color: '#fff',
+    border: 'none',
+    borderRadius: '8px',
+    padding: '6px 16px',
+    fontWeight: '700',
+    fontSize: '13px',
+    cursor: 'pointer',
+    transition: 'background-color 0.2s ease'
+  },
+  
+  createButton: {
+    background: '#131313',
+    color: '#fff',
+    border: 'none',
+    borderRadius: '8px',
+    padding: '6px 16px',
+    fontWeight: '700',
+    fontSize: '13px',
+    cursor: 'pointer',
+    transition: 'background-color 0.2s ease'
+  },
+  
+  allButton: {
+    background: '#131313',
+    color: '#fff',
+    border: 'none',
+    borderRadius: '8px',
+    padding: '6px 16px',
+    fontWeight: '700',
+    fontSize: '13px',
+    cursor: 'pointer',
+    transition: 'background-color 0.2s ease'
+  },
+  
+  foeButton: {
+    background: '#131313',
+    color: '#fff',
+    border: 'none',
+    borderRadius: '8px',
+    padding: '6px 16px',
+    fontWeight: '700',
+    fontSize: '13px',
+    cursor: 'pointer',
+    transition: 'background-color 0.2s ease'
+  },
+  
+  ticketsButton: {
+    background: '#131313',
+    color: '#fff',
+    border: 'none',
+    borderRadius: '8px',
+    padding: '6px 16px',
+    fontWeight: '700',
+    fontSize: '13px',
+    cursor: 'pointer',
+    transition: 'background-color 0.2s ease'
+  },
+  
+  // Perfect Orbital Carousel
+  matchCardsContainer: {
+    overflow: 'hidden',
+    padding: '28px 0',
+    height: 'auto',
+    minHeight: '150px',
+    position: 'relative',
+    userSelect: 'none'
+  },
+  
+  carouselTrack: {
+    display: 'flex',
+    gap: '12px',
+    width: 'fit-content',
+    position: 'relative',
+    willChange: 'transform' // Optimize for smooth animation
+  },
+  
+  // Match Cards
+  individualMatchCard: {
+    background: '#23272f',
+    borderRadius: '10px',
+    minWidth: '260px',
+    maxWidth: '260px',
+    height: 'auto',
+    color: '#fff',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    boxShadow: '0 1px 4px 0 rgba(0,0,0,0.07)',
+    padding: '21px',
+    fontSize: '13px',
+    border: '1.5px solid #23272f',
+    position: 'relative',
+    flexShrink: 0
+  },
+  
+  matchCardHeader: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: '8px'
+  },
+  
+  hostAvatar: {
+    width: '24px',
+    height: '24px',
+    borderRadius: '50%',
+    border: '1.5px solid #18191c',
+    background: '#fff',
+    objectFit: 'cover'
+  },
+  
+  foeAvatar: {
+    width: '24px',
+    height: '24px',
+    borderRadius: '50%',
+    border: '1.5px solid #18191c',
+    background: '#fff',
+    objectFit: 'cover'
+  },
+  
+  vsText: {
+    fontWeight: '700',
+    fontSize: '13px',
+    margin: '0 4px'
+  },
+  
+  matchDateTime: {
+    fontWeight: '700',
+    fontSize: '13px',
+    marginLeft: '8px'
+  },
+  
+  matchCardDetails: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '4px',
+    fontSize: '12px',
+    color: '#aaa',
+    marginBottom: '12px'
+  },
+  
+  sportIcon: {
+    fontSize: '12px'
+  },
+  
+  locationName: {
+    fontSize: '12px'
+  },
+  
+  // Card Buttons
+  ticketButton: {
+    border: 'none',
+    borderRadius: '8px',
+    padding: '8px 22px',
+    fontWeight: '700',
+    fontSize: '15px',
+    cursor: 'pointer',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '4px',
+    transition: 'opacity 0.2s ease, transform 0.1s ease',
+    background: '#fefefe',
+    color: '#131313'
+  },
+  
+  lockInButton: {
+    border: 'none',
+    borderRadius: '8px',
+    padding: '8px 22px',
+    fontWeight: '700',
+    fontSize: '15px',
+    cursor: 'pointer',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '4px',
+    transition: 'opacity 0.2s ease, transform 0.1s ease',
+    background: '#ff0000',
+    color: '#fff'
+  },
+  
+  // Nike Ad Banner
+  nikeAdBanner: {
+    height: '90px',
+    background: 'linear-gradient(135deg, #000, #333)',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: '20px',
+    padding: '0 20px'
+  },
+  
+  nikeLogo: {
+    height: '40px',
+    filter: 'invert(1)'
+  },
+  
+  nikeAdContent: {
+    display: 'flex',
+    flexDirection: 'column'
+  },
+  
+  nikeAdTitle: {
+    fontSize: '18px',
+    fontWeight: 'bold',
+    color: '#fff'
+  },
+  
+  nikeAdSubtitle: {
+    fontSize: '14px',
+    color: '#ccc'
+  },
+  
+  // Mobile Tab Container
+  mobileTabContainer: {
+    display: 'flex',
+    background: '#23272f',
+    borderRadius: '10px 10px 0 0',
+    margin: '0 20px',
+    overflow: 'hidden'
+  },
+  
+  mobileTab: {
+    flex: 1,
+    background: '#1a1a1a',
+    color: '#ccc',
+    border: 'none',
+    padding: '15px',
+    fontSize: '16px',
+    fontWeight: 'bold',
+    cursor: 'pointer',
+    transition: 'all 0.2s ease'
+  },
+  
+  mobileTabActive: {
+    background: '#23272f',
+    color: '#fff'
+  },
+  
+  // Main Content Container
+  mainContentContainer: {
+    display: 'flex',
+    flex: 1,
+    gap: '20px',
+    padding: '20px',
+    minHeight: '400px'
+  },
+  
+  mainContentContainerMobile: {
+    padding: '0 20px 20px 20px',
+    gap: '0'
+  },
+  
+  // Chat Container - Now matches 9:16 ratio height
+  chatContainer: {
+    flex: 1,
+    background: '#23272f',
+    borderRadius: '10px',
+    display: 'flex',
+    flexDirection: 'column',
+    overflow: 'hidden',
+    height: '533px' // Same as leaderboard to align bottoms
+  },
+  
+  chatContainerMobile: {
+    borderRadius: '0 0 10px 10px',
+    height: 'auto',
+    minHeight: '400px'
+  },
+  
+  chatHeader: {
+    padding: '15px 20px',
+    borderBottom: '1px solid #2c3e50',
+    fontWeight: 'bold',
+    fontSize: '16px',
+    flexShrink: 0
+  },
+  
+  chatMessagesContainer: {
+    flex: 1,
+    padding: '15px 20px',
+    overflowY: 'auto',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '10px'
+  },
+  
+  chatMessage: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '10px'
+  },
+  
+  chatUserAvatar: {
+    width: '30px',
+    height: '30px',
+    borderRadius: '50%'
+  },
+  
+  chatUsername: {
+    fontWeight: 'bold',
+    fontSize: '14px'
+  },
+  
+  chatMessageText: {
+    fontSize: '14px',
+    color: '#ccc'
+  },
+  
+  chatInputForm: {
+    padding: '15px 20px',
+    borderTop: '1px solid #2c3e50',
+    display: 'flex',
+    gap: '10px',
+    flexShrink: 0
+  },
+  
+  chatInputField: {
+    flex: 1,
+    padding: '10px',
+    borderRadius: '5px',
+    border: '1px solid #444',
+    background: '#1a1a1a',
+    color: '#fff',
+    outline: 'none'
+  },
+  
+  chatSendButton: {
+    padding: '10px 15px',
+    borderRadius: '5px',
+    border: 'none',
+    background: '#ff0000',
+    color: '#fff',
+    cursor: 'pointer'
+  },
+  
+  // Leaderboard Container - Perfect 9:16 aspect ratio
+  leaderboardContainer: {
+    width: '300px',
+    height: '533px', // 300 * 16/9 = 533px for perfect 9:16 ratio
+    background: '#23272f',
+    borderRadius: '10px',
+    display: 'flex',
+    flexDirection: 'column',
+    overflow: 'hidden',
+    flexShrink: 0
+  },
+  
+  leaderboardContainerMobile: {
+    width: '100%',
+    borderRadius: '0 0 10px 10px',
+    height: 'auto',
+    minHeight: '400px'
+  },
+  
+  leaderboardHeader: {
+    padding: '15px 20px',
+    borderBottom: '1px solid #2c3e50',
+    fontWeight: 'bold',
+    fontSize: '16px',
+    flexShrink: 0
+  },
+  
+  leaderboardPlayersList: {
+    flex: 1,
+    padding: '15px 20px',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '10px'
+  },
+  
+  leaderboardPlayerCard: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '10px',
+    padding: '10px',
+    borderRadius: '8px',
+    background: '#1a1a1a'
+  },
+  
+  playerAvatar: {
+    width: '40px',
+    height: '40px',
+    borderRadius: '50%'
+  },
+  
+  playerRank: {
+    fontWeight: 'bold',
+    fontSize: '16px',
+    width: '30px'
+  },
+  
+  playerName: {
+    flex: 1,
+    fontSize: '14px'
+  },
+  
+  playerWins: {
+    fontSize: '12px',
+    color: '#ccc'
+  },
+  
+  // Bottom Navigation
+  bottomNavigation: {
+    height: '60px',
+    background: '#23272f',
+    borderTop: '1px solid #2c3e50',
+    display: 'flex',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    padding: '0 20px'
+  },
+  
+  navButton: {
+    background: 'none',
+    border: 'none',
+    color: '#fff',
+    cursor: 'pointer',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    gap: '5px',
+    padding: '10px'
+  },
+  
+  navButtonText: {
+    fontSize: '12px'
+  }
 };
 
 export default Home;

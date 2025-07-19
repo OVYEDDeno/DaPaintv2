@@ -1,19 +1,25 @@
-import React from "react";
+import React from 'react';
 
-const Notifications = () => (
-  <div style={{ background: "#131313", color: "#fefefe", minHeight: "100vh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
-    <img src="https://res.cloudinary.com/dj2umay9c/image/upload/v1733970532/Saturday_30th_DaPaint_Playoff-removebg-preview_yaiflb.png" alt="DaPaint Logo" style={{ width: 120, marginBottom: 32 }} />
-    <h1 style={{ color: "#ff0000" }}>Notifications</h1>
-    <p style={{ maxWidth: 500, textAlign: "center", margin: "24px 0" }}>
-      Get notified about everything that matters to you on DaPaint: match invites, results, friend requests, and more. Stay in the loop!
-    </p>
-    <ul style={{ textAlign: "left", maxWidth: 400 }}>
-      <li>Match invites and updates</li>
-      <li>Results and win streaks</li>
-      <li>Friend requests and messages</li>
-      <li>System and community alerts</li>
-    </ul>
-  </div>
-);
+const Notifications = () => {
+  return (
+    <div className="simple-page">
+      <img 
+        src="https://res.cloudinary.com/dj2umay9c/image/upload/v1733970532/Saturday_30th_DaPaint_Playoff-removebg-preview_yaiflb.png" 
+        alt="DaPaint Logo" 
+        className="page-logo"
+      />
+      <h1 className="page-title">Notifications</h1>
+      <p className="page-description">
+        Stay updated with all your DaPaint activities! Here you'll find notifications about matches, earnings, and important updates.
+      </p>
+      <ul className="profile-features">
+        <li>Match invitations and updates</li>
+        <li>Earnings notifications</li>
+        <li>Win streak achievements</li>
+        <li>System announcements</li>
+      </ul>
+    </div>
+  );
+};
 
 export default Notifications; 

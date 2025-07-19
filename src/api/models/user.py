@@ -50,6 +50,9 @@ class User(db.Model):
     losses = db.Column(db.Integer, default=0)
     disqualifications = db.Column(db.Integer, default=0)
     chat_streak = db.Column(db.Integer, default=0, nullable=True)
+
+    # Session time tracking
+    session_time = db.Column(db.Integer, default=0)  # Total session time in seconds
     
     # Social Media Links
     instagram_url = db.Column(db.String(200), nullable=True)
@@ -161,4 +164,5 @@ class User(db.Model):
             "invite_code": self.invite_code.serialize() if self.invite_code else None,
             "invited_by": self.invited_by.serialize() if self.invited_by else None,
             "admin_profile": self.admin_profile.serialize() if self.admin_profile else None,
+            "session_time": self.session_time,
         } 

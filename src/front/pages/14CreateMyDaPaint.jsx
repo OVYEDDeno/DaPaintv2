@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 
-const DaPaintSubmit = () => {
+const CreateMyDaPaint = () => {
   const [step, setStep] = useState(0);
   const [formData, setFormData] = useState({});
 
   const steps = [
-    { label: 'Match Date', example: 'MM/DD/YYYY' },
-    { label: 'Match Time', example: 'HH:MM AM/PM' },
+    { label: 'Sport Type', example: 'Basketball, Football, etc.' },
     { label: 'Location', example: 'City, State' },
-    { label: 'Result', example: 'Win/Loss' }
+    { label: 'Date & Time', example: 'MM/DD/YYYY HH:MM' },
+    { label: 'Entry Fee', example: '$10, $20, etc.' }
   ];
 
   const handleInputChange = (value) => {
@@ -28,7 +28,7 @@ const DaPaintSubmit = () => {
   };
 
   const handleSubmit = () => {
-    console.log('Submitting:', formData);
+    console.log('Creating DaPaint:', formData);
   };
 
   return (
@@ -38,7 +38,7 @@ const DaPaintSubmit = () => {
         alt="DaPaint Logo" 
         className="page-logo-small"
       />
-      <h2 className="page-title">Submit DaPaint Result - Step {step + 1} of {steps.length}</h2>
+      <h2 className="page-title">Create a DaPaint - Step {step + 1} of {steps.length}</h2>
       <label className="form-label">{steps[step].label}</label>
       <input
         type="text"
@@ -59,4 +59,4 @@ const DaPaintSubmit = () => {
   );
 };
 
-export default DaPaintSubmit; 
+export default CreateMyDaPaint; 

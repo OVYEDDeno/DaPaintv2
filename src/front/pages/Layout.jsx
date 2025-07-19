@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
+import { Bg } from "../components/Bg";
 
 const Layout = () => {
   const navigate = useNavigate();
@@ -8,7 +9,8 @@ const Layout = () => {
   const [rightToggle, setRightToggle] = useState(false);
   const [leftToggle, setLeftToggle] = useState(false);
   const [winStreak, setWinStreak] = useState(7);
-  const [activeFilter, setActiveFilter] = useState('all'); // 'all', 'looking-for-foe', 'selling-tickets'
+  const [activeFilter, setActiveFilter] = useState('all');
+  const [showCard, setShowCard] = useState(true);
   const scrollRef = useRef(null);
   const scrollIntervalRef = useRef(null);
 
@@ -220,7 +222,7 @@ const Layout = () => {
       host: {
         id: 16,
         name: "Speed Demon",
-        avatar: "https://randomuser.me/api/portraits/men/56.jpg",
+        avatar: "https://randomuser.me/api/portraits/men/51.jpg",
         winStreak: 8,
         rating: 4.7,
       },
@@ -349,11 +351,35 @@ const Layout = () => {
     };
   }, [isAuthenticated, activeFilter]);
 
+  // Auto-scroll functionality
+  const startAutoScroll = () => {
+    if (scrollIntervalRef.current) return;
+    
+    scrollIntervalRef.current = setInterval(() => {
+      if (scrollRef.current) {
+        const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
+        const maxScroll = scrollWidth - clientWidth;
+        
+        if (scrollLeft >= maxScroll) {
+          scrollRef.current.scrollLeft = 0;
+        } else {
+          scrollRef.current.scrollLeft += 1;
+        }
+      }
+    }, 30);
+  };
+
+  const stopAutoScroll = () => {
+    if (scrollIntervalRef.current) {
+      clearInterval(scrollIntervalRef.current);
+      scrollIntervalRef.current = null;
+    }
+  };
+
+  // Event handlers
   const handleAuthToggle = () => {
     if (isAuthenticated) {
       setIsAuthenticated(false);
-      setLeftToggle(false);
-      localStorage.removeItem('dapaint_token');
       navigate("/");
     } else {
       navigate("/auth");
@@ -361,8 +387,7 @@ const Layout = () => {
   };
 
   const handleRightToggle = () => {
-    setRightToggle(!rightToggle);
-    if (!rightToggle) {
+    if (rightToggle) {
       navigate("/ads");
     } else {
       navigate("/");
@@ -370,8 +395,9 @@ const Layout = () => {
   };
 
   const handleLeftToggle = () => {
-    if (isAuthenticated) {
-      handleAuthToggle();
+    if (leftToggle) {
+      setIsAuthenticated(false);
+      navigate("/");
     } else {
       navigate("/auth");
     }
@@ -382,11 +408,11 @@ const Layout = () => {
   };
 
   const handleFilterClick = () => {
-    navigate("/dapaint/filter");
+    navigate("/filter");
   };
 
   const handleCreateClick = () => {
-    navigate("/dapaint/create");
+    navigate("/create");
   };
 
   const handleProfileClick = () => {
@@ -405,212 +431,93 @@ const Layout = () => {
     navigate("/feedback");
   };
 
+  const handleAdvertiseOnDaPaintClick = () => {
+    navigate("/advertise");
+  };
 
+  const handleAdvertiseOnDaPaintTokenClick = () => {
+    navigate("/advertise-token");
+  };
+
+  const handleLockInDaPaintClick = () => {
+    navigate("/lockin");
+  };
+
+  const handlePlayOnDaPaintClick = () => {
+    navigate("/play");
+  };
+
+  const handlePlayOnDaPaintTokenClick = () => {
+    navigate("/play-token");
+  };
 
   return (
-    <div style={{ 
-      background: "#131313", 
-      height: "100vh", 
-      color: "#fefefe",
-      display: "flex",
-      flexDirection: "column",
-      overflow: "hidden"
-    }}>
+    <div className="layout-container">
+      {/* Background Component */}
+      <Bg showCard={showCard} />
+      
       {/* Header */}
-      <header
-        style={{
-          width: "100%",
-          color: "#fff",
-          padding: "6px 14px 0 14px",
-          borderRadius: 0,
-          boxShadow: "none",
-          margin: 0,
-          position: "relative",
-          zIndex: 10,
-          fontWeight: 700,
-          fontSize: 16,
-          letterSpacing: 1,
-        }}
-      >
-        <div style={{ 
-          display: "flex", 
-          width: "100%", 
-          alignItems: "center", 
-          justifyContent: "space-between", 
-          maxWidth: 1200,
-          margin: "0 auto"
-        }}>
-          {/* Left action button (Advertise/Play) */}
-          <button
-            onClick={handleRightToggle}
-            style={{
-              background: rightToggle ? '#ff0000' : '#131313',
-              color: rightToggle ? '#fefefe' : '#ff0000',
-              border: '1px solid #ff0000',
-              borderRadius: 4,
-              padding: '8px 12px',
-              minWidth: 40,
-              cursor: 'pointer',
-              transition: 'all 0.2s ease',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-            aria-label={rightToggle ? 'Play On DaPaint' : 'Advertise On DaPaint'}
-            title={rightToggle ? 'Play On DaPaint' : 'Advertise On DaPaint'}
-            className="header-action-btn advertise-btn"
-          >
-            <span className="header-btn-text">{rightToggle ? (
-              <span style={{ display: 'inline-block' }}>🎮</span>
-            ) : (
-              <span style={{ display: 'inline-block' }}>📢</span>
-            )}</span>
-            <span className="header-btn-label">{rightToggle ? 'Play On DaPaint' : 'Advertise On DaPaint'}</span>
-          </button>
+      <header className="header">
+        {/* Left action button (Advertise/Play) */}
+        <button
+          onClick={handleRightToggle}
+          className={`header-action-btn ${rightToggle ? 'active' : ''}`}
+          aria-label={rightToggle ? 'Play On DaPaint' : 'Advertise On DaPaint'}
+          title={rightToggle ? 'Play On DaPaint' : 'Advertise On DaPaint'}
+        >
+          <span className="header-btn-text">{rightToggle ? (
+            <span>🎮</span>
+          ) : (
+            <span>📢</span>
+          )}</span>
+          <span className="header-btn-label">{rightToggle ? 'Play On DaPaint' : 'Advertise On DaPaint'}</span>
+        </button>
 
-          {/* Center: Logo or Win Streak Tracker */}
-          <div style={{ flex: 1, display: 'flex', justifyContent: 'center', alignItems: 'center', minWidth: 0, margin: '0 12px' }}>
-            {isAuthenticated ? (
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "8px",
-                  width: "100%",
-                  minWidth: 0,
-                  justifyContent: "center",
-                  height: 56,
-                  cursor: 'pointer',
-                }}
-                onClick={handleLogoClick}
-              >
-                <span
-                  style={{
-                    color: "#ff0000",
-                    fontWeight: "bold",
-                    fontSize: "16px",
-                    whiteSpace: "nowrap",
-                  }}
-                >
-                  ({winStreak})
-                </span>
-                <div
-                  className="win-streak-bar"
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "8px",
-                    flex: 1,
-                    minWidth: 0,
-                  }}
-                >
-                  <div
-                    className="progress-bar-left"
-                    style={{
-                      flex: 1,
-                      height: "4px",
-                      background: "#333",
-                      borderRadius: "2px",
-                      position: "relative",
-                      minWidth: 0,
-                      display: "none",
-                    }}
-                  >
-                    <div
-                      style={{
-                        width: `${(winStreak / 10) * 100}%`,
-                        height: "100%",
-                        background: "#ff0000",
-                        borderRadius: "2px",
-                        transition: "width 0.3s ease",
-                      }}
-                    />
-                  </div>
-                  <img
-                    src="https://res.cloudinary.com/dj2umay9c/image/upload/v1733970532/Saturday_30th_DaPaint_Playoff-removebg-preview_yaiflb.png"
-                    alt="DaPaint Logo"
-                    style={{
-                      height: 56,
-                      width: "auto",
-                      transition: "transform 0.2s ease",
-                      display: 'block',
-                      margin: '0 auto',
-                    }}
-                    onMouseEnter={(e) => (e.target.style.transform = "scale(1.05)")}
-                    onMouseLeave={(e) => (e.target.style.transform = "scale(1)")}
-                  />
-                  <div
-                    className="progress-bar-right"
-                    style={{
-                      flex: 1,
-                      height: "4px",
-                      background: "#333",
-                      borderRadius: "2px",
-                      minWidth: 0,
-                      display: "none",
-                    }}
+        {/* Center: Logo or Win Streak Tracker */}
+        <div className="header-center">
+          {isAuthenticated ? (
+            <div className="win-streak-container" onClick={handleLogoClick}>
+              <span className="win-streak-count">({winStreak})</span>
+              <div className="win-streak-bar">
+                <div className="progress-bar-left">
+                  <div 
+                    className="progress-bar-fill"
+                    style={{ width: `${(winStreak / 10) * 100}%` }}
                   />
                 </div>
-                <span
-                  style={{
-                    color: "#ff0000",
-                    fontWeight: "bold",
-                    fontSize: "16px",
-                    whiteSpace: "nowrap",
-                  }}
-                >
-                  (10)
-                </span>
+                <img
+                  src="https://res.cloudinary.com/dj2umay9c/image/upload/v1733970532/Saturday_30th_DaPaint_Playoff-removebg-preview_yaiflb.png"
+                  alt="DaPaint Logo"
+                  className="dapaint-logo"
+                />
+                <div className="progress-bar-right" />
               </div>
-            ) : (
-              <img
-                src="https://res.cloudinary.com/dj2umay9c/image/upload/v1733970532/Saturday_30th_DaPaint_Playoff-removebg-preview_yaiflb.png"
-                alt="DaPaint Logo"
-                style={{
-                  height: 56,
-                  cursor: "pointer",
-                  transition: "transform 0.2s ease",
-                  display: 'block',
-                  margin: '0 auto',
-                }}
-                onClick={handleLogoClick}
-                onMouseEnter={(e) => (e.target.style.transform = "scale(1.05)")}
-                onMouseLeave={(e) => (e.target.style.transform = "scale(1)")}
-              />
-            )}
-          </div>
-
-          {/* Right action button (Log Out/Lock In) */}
-          <button
-            onClick={handleLeftToggle}
-            style={{
-              background: leftToggle ? '#ff0000' : '#131313',
-              color: leftToggle ? '#fefefe' : '#ff0000',
-              border: '1px solid #ff0000',
-              borderRadius: 4,
-              padding: '8px 12px',
-              minWidth: 40,
-              cursor: 'pointer',
-              transition: 'all 0.2s ease',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-            aria-label={leftToggle ? 'Log Out DaPaint' : 'Lock In DaPaint'}
-            title={leftToggle ? 'Log Out DaPaint' : 'Lock In DaPaint'}
-            className="header-action-btn logout-btn"
-          >
-            <span className="header-btn-text">{leftToggle ? (
-              <span style={{ display: 'inline-block' }}>↩️</span>
-            ) : (
-              <span style={{ display: 'inline-block' }}>🔒</span>
-            )}</span>
-            <span className="header-btn-label">{leftToggle ? 'Log Out DaPaint' : 'Lock In DaPaint'}</span>
-          </button>
+              <span className="win-streak-count">(10)</span>
+            </div>
+          ) : (
+            <img
+              src="https://res.cloudinary.com/dj2umay9c/image/upload/v1733970532/Saturday_30th_DaPaint_Playoff-removebg-preview_yaiflb.png"
+              alt="DaPaint Logo"
+              className="dapaint-logo"
+              onClick={handleLogoClick}
+            />
+          )}
         </div>
 
-        {/* Auth section */}
-        {/* Removed Upcoming DaPaint and leaderboard ad. Now only in Home.jsx */}
+        {/* Right action button (Log Out/Lock In) */}
+        <button
+          onClick={handleLeftToggle}
+          className={`header-action-btn ${leftToggle ? 'active' : ''}`}
+          aria-label={leftToggle ? 'Log Out DaPaint' : 'Lock In DaPaint'}
+          title={leftToggle ? 'Log Out DaPaint' : 'Lock In DaPaint'}
+        >
+          <span className="header-btn-text">{leftToggle ? (
+            <span>😞</span>
+          ) : (
+            <span>🔒</span>
+          )}</span>
+          <span className="header-btn-label">{leftToggle ? 'Log Out DaPaint' : 'Lock In DaPaint'}</span>
+        </button>
       </header>
 
       {/* Main content */}
@@ -618,114 +525,52 @@ const Layout = () => {
 
       {/* Bottom Navigation - Only for authenticated users */}
       {isAuthenticated && (
-        <footer style={{ 
-          position: "fixed",
-          bottom: 0,
-          left: 0,
-          right: 0,
-          height: 56, 
-          background: "#131313", 
-          borderTop: "1px solid #222", 
-          display: "flex", 
-          alignItems: "center", 
-          justifyContent: "space-around",
-          zIndex: 100,
-          boxShadow: "0 -2px 8px rgba(0,0,0,0.3)",
-          flexShrink: 0
-        }}>
-          <button 
-            onClick={() => navigate("/")}
-            style={{ 
-              background: "none", 
-              border: "none", 
-              color: location.pathname === "/" ? "#ff0000" : "#fefefe", 
-              cursor: "pointer",
-              fontSize: 12,
-              fontWeight: location.pathname === "/" ? "bold" : "normal",
-              transition: "all 0.2s ease"
-            }}
-          >
-            🏠 Home
+        <footer className="bottom-navigation">
+          <button className="nav-button" onClick={() => navigate("/")}>
+            <span className="nav-icon">🏠</span>
+            <span className="nav-label">Home</span>
           </button>
-          <button 
-            onClick={handleProductClick}
-            style={{ 
-              background: "none", 
-              border: "none", 
-              color: location.pathname === "/product" ? "#ff0000" : "#fefefe", 
-              cursor: "pointer",
-              fontSize: 12,
-              fontWeight: location.pathname === "/product" ? "bold" : "normal",
-              transition: "all 0.2s ease"
-            }}
-          >
-            🛍️ Products
+          <button className="nav-button" onClick={() => navigate("/")}>
+            <span className="nav-icon">💬</span>
+            <span className="nav-label">Chat</span>
           </button>
-          <button 
-            onClick={handleNotificationsClick}
-            style={{ 
-              background: "none", 
-              border: "none", 
-              color: location.pathname === "/notifications" ? "#ff0000" : "#fefefe", 
-              cursor: "pointer",
-              fontSize: 12,
-              fontWeight: location.pathname === "/notifications" ? "bold" : "normal",
-              transition: "all 0.2s ease"
-            }}
-          >
-            🔔 Notifications
+          <button className="nav-button" onClick={() => navigate("/")}>
+            <span className="nav-icon">📊</span>
+            <span className="nav-label">Stats</span>
           </button>
-          <button 
-            onClick={handleProfileClick}
-            style={{ 
-              background: "none", 
-              border: "none", 
-              color: location.pathname === "/profile" ? "#ff0000" : "#fefefe", 
-              cursor: "pointer",
-              fontSize: 12,
-              fontWeight: location.pathname === "/profile" ? "bold" : "normal",
-              transition: "all 0.2s ease"
-            }}
-          >
-            👤 Profile
+          <button className="nav-button" onClick={() => navigate("/")}>
+            <span className="nav-icon">👤</span>
+            <span className="nav-label">Profile</span>
           </button>
         </footer>
       )}
+
+      {/* Dev Navigation */}
+      <div className="dev-navigation">
+        <div className="dev-nav-title">Dev Nav:</div>
+        <button onClick={() => navigate('/')} className="dev-nav-button">Home</button>
+        <button onClick={() => navigate('/ads')} className="dev-nav-button">Ads</button>
+        <button onClick={() => navigate('/auth')} className="dev-nav-button">Auth</button>
+        <button onClick={() => navigate('/product')} className="dev-nav-button">Product</button>
+        <button onClick={() => navigate('/create')} className="dev-nav-button">Create</button>
+        <button onClick={() => navigate('/submit')} className="dev-nav-button">Submit</button>
+        <button onClick={() => navigate('/filter')} className="dev-nav-button">Filter</button>
+        <button onClick={() => navigate('/profile')} className="dev-nav-button">Profile</button>
+        <button onClick={() => navigate('/notifications')} className="dev-nav-button">Notifications</button>
+        <button onClick={() => navigate('/feedback')} className="dev-nav-button">Feedback</button>
+        <button onClick={() => navigate('/advertise')} className="dev-nav-button">Advertise</button>
+        <button onClick={() => navigate('/advertise-token')} className="dev-nav-button">Ad Token</button>
+        <button onClick={() => navigate('/lockin')} className="dev-nav-button">Lock In</button>
+        <button onClick={() => navigate('/play')} className="dev-nav-button">Play</button>
+        <button onClick={() => navigate('/play-token')} className="dev-nav-button">Play Token</button>
+        <button onClick={() => navigate('/lineupondapaint')} className="dev-nav-button">Lineup On DaPaint</button>
+        <button onClick={() => navigate('/sales')} className="dev-nav-button">Sales</button>
+        <button onClick={() => navigate('/start')} className="dev-nav-button">Start</button>
+        <button onClick={() => navigate('/tickets')} className="dev-nav-button">Tickets</button>
+        <button onClick={() => navigate('/ads copy')} className="dev-nav-button">Ads Copy</button>
+      </div>
     </div>
   );
 };
 
 export default Layout;
-
-if (typeof window !== 'undefined') {
-  const style = document.createElement('style');
-  style.innerHTML = `
-    @media (max-width: 599px) {
-      .header-btn-label {
-        display: none !important;
-      }
-      .header-action-btn {
-        min-width: 40px !important;
-        padding: 8px !important;
-      }
-    }
-    @media (min-width: 600px) {
-      .header-btn-label {
-        display: inline !important;
-      }
-    }
-    @media (min-width: 600px) {
-      .win-streak-bar .progress-bar-left,
-      .win-streak-bar .progress-bar-right {
-        display: block !important;
-      }
-    }
-    @media (max-width: 599px) {
-      .win-streak-bar .progress-bar-left,
-      .win-streak-bar .progress-bar-right {
-        display: none !important;
-      }
-    }
-  `;
-  document.head.appendChild(style);
-}
