@@ -28,7 +28,7 @@ const PlayCursor = ({ visible }) => {
         display: visible ? 'flex' : 'none',
         alignItems: 'center',
         justifyContent: 'center',
-        fontFamily: 'Anton, sans-',
+        fontFamily: 'Anton',
         fontSize: '2rem',
         color: '#fff',
         background: '#ff0000',

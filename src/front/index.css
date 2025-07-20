@@ -1,8 +1,12 @@
+@import url('https://fonts.googleapis.com/css2?family=Anton:wght@400&display=swap');
+
 /* === General Reset === */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  font-family: 'Anton', sans-serif !important;
+  font-weight: 400 !important;
 }
 
 :root {
@@ -15,9 +19,30 @@
 
 /* === Body Styles === */
 body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: 'Anton', sans-serif !important;
+  font-weight: 400 !important;
   background: var(--background-color);
   color: var(--secondary-color);
+}
+
+/* Lower all font-weights above 500 to 400 */
+.play-title,
+.play-subtitle,
+.play-banner,
+.social-banner-text-full,
+.social-banner-text,
+.header,
+.header-action-btn,
+.header-btn-label,
+.header-btn-text,
+.win-streak-count,
+.play-card-title,
+.play-net-earnings,
+.leaderboard-header,
+.leaderboard-player-card,
+.player-name,
+.player-wins {
+  font-weight: 400 !important;
 }
 
 /* === Layout Component Styles === */
@@ -101,7 +126,7 @@ body {
 
 .win-streak-count {
   color: #ff0000;
-  font-weight: bold;
+  font-weight: 400;
   font-size: 16px;
   white-space: nowrap;
 }
@@ -200,7 +225,7 @@ body {
 }
 
 .monthly-earnings {
-  font-weight: 700;
+  font-weight: 400;
   font-size: 18px;
 }
 
@@ -378,7 +403,7 @@ body {
 
 .match-details h4 {
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 400;
   margin-bottom: 2px;
   color: #fff;
 }
@@ -421,7 +446,7 @@ body {
 .host-name,
 .player-name {
   font-size: 12px;
-  font-weight: 500;
+  font-weight: 400;
   color: #fff;
 }
 
@@ -454,7 +479,7 @@ body {
 }
 
 .vs-text {
-  font-weight: 500;
+  font-weight: 400;
   font-size: 13px;
   margin: 0 4px;
   color: #fff;
@@ -649,7 +674,7 @@ body {
 
 .leaderboard-header {
   color: #ff4d4f;
-  font-weight: 500;
+  font-weight: 400;
   font-size: 16px;
   margin: 16px 0 8px 16px;
   display: flex;
@@ -680,7 +705,7 @@ body {
   color: #fff;
   border-radius: 8px;
   padding: 10px 12px;
-  font-weight: 500;
+  font-weight: 400;
   display: flex;
   align-items: center;
   gap: 10px;
@@ -713,12 +738,12 @@ body {
 
 .player-name {
   flex: 1;
-  font-weight: 500;
+  font-weight: 400;
 }
 
 .player-wins {
   color: #aaa;
-  font-weight: 500;
+  font-weight: 400;
   font-size: 13px;
 }
 
@@ -730,7 +755,7 @@ body {
   flex-direction: column;
   align-items: center;
   gap: 40px;
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-family: 'Anton', sans-serif !important;
   width: 100%;
   min-height: calc(100vh - 57px - 68px);
   margin-top: 0;
@@ -739,17 +764,36 @@ body {
 .play-section {
   max-width: 640px;
   text-align: center;
+  margin-bottom: 120px;
 }
 
 .play-title {
-  font-size: 32px;
-  font-weight: 700;
-  margin-bottom: 12px;
+  margin-top: 200px;
+  text-align: center;
+  font-size: clamp(2.5rem, 10vw, 110px);
+  font-weight: 500;
+  color: #ff9900;
+  text-shadow: 
+    0 0 2px #ff9900,
+    0 0 4px #ff9900,
+    0 0 6px #ff9900,
+    0 0 8px #ff9900,
+    0 0 10px #ff9900,
+    0 0 12px #ff9900,
+    0 0 14px #ff9900;
+    /* 0 0 4px #ff0000,
+    0 0 6px #ff0000,
+    0 0 8px #ff0000,
+    0 0 10px #ff0000,
+    0 0 12px #ff0000,
+    0 0 14px #ff0000,
+    0 0 16px #ff0000; */
+  animation: neonPulse 2s ease-in-out infinite alternate;
 }
 
 .play-subtitle {
   font-size: 24px;
-  font-weight: 700;
+  font-weight: 400;
   margin-bottom: 12px;
 }
 
@@ -826,7 +870,7 @@ body {
 
 .play-card-title {
   font-size: 18px;
-  font-weight: 700;
+  font-weight: 400;
   margin-bottom: 8px;
 }
 
@@ -860,7 +904,7 @@ body {
 }
 
 .play-label {
-  font-weight: 700;
+  font-weight: 400;
   font-size: 14px;
   margin-bottom: 4px;
   display: flex;
@@ -887,7 +931,7 @@ body {
 }
 
 .play-net-earnings {
-  font-weight: 700;
+  font-weight: 400;
   font-size: 18px;
 }
 
@@ -907,7 +951,7 @@ body {
 }
 
 .password-reset-title {
-  font-weight: 600;
+  font-weight: 400;
   margin-bottom: 8px;
 }
 
@@ -926,6 +970,20 @@ body {
   max-width: 340px;
 }
 
+/* === Emoji Overlay Styles === */
+.emoji-overlay {
+  position: absolute;
+  pointer-events: auto;
+  z-index: 3;
+  transition: transform 0.2s;
+  filter: drop-shadow(0 2px 4px #0008);
+  cursor: pointer;
+}
+
+.emoji-overlay:hover {
+  transform: scale(1.3) !important;
+}
+
 /* === Responsive Design === */
 @media (max-width: 599px) {
   .header-btn-label {
@@ -935,6 +993,34 @@ body {
   .header-action-btn {
     min-width: 32px;
     max-width: 32px;
+  }
+  
+  /* Mobile emoji overlay adjustments */
+  .emoji-overlay {
+    font-size: 24px !important;
+    max-width: 30px;
+    max-height: 30px;
+    overflow: hidden;
+  }
+  
+  /* Mobile neon effect - very subtle */
+  .play-title {
+    text-shadow: 
+      0 0 1px #ff9900,
+      0 0 2px #ff9900,
+      0 0 3px #ff9900,
+      0 0 4px #ff9900,
+      0 0 5px #ff9900,
+      0 0 6px #ff9900 !important;
+  }
+  
+  /* Reduce emoji count and spacing on mobile */
+  .play-title {
+    position: relative;
+  }
+  
+  .play-title .emoji-overlay:nth-child(n+5) {
+    display: none;
   }
   
   .win-streak-bar .progress-bar-left,
@@ -1023,6 +1109,32 @@ body {
     padding: 4px 8px;
   }
   
+  /* Further reduce emojis on smaller screens */
+  .play-title .emoji-overlay:nth-child(n+4) {
+    display: none;
+  }
+  
+  .emoji-overlay {
+    font-size: 20px !important;
+    max-width: 25px;
+    max-height: 25px;
+  }
+  
+  /* Medium screen neon effect - subtle */
+  .play-title {
+    text-shadow: 
+      0 0 1px #ff9900,
+      0 0 2px #ff9900,
+      0 0 3px #ff9900,
+      0 0 4px #ff9900,
+      0 0 5px #ff9900,
+      0 0 6px #ff9900,
+      0 0 7px #ff9900,
+      0 0 8px #ff9900,
+      0 0 9px #ff9900,
+      0 0 10px #ff9900 !important;
+  }
+  
   .win-streak-container {
     max-width: 200px;
   }
@@ -1068,6 +1180,31 @@ body {
 @keyframes fadeInUp {
   0% { opacity: 0; transform: translateY(40px); }
   100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes neonPulse {
+  0% {
+    text-shadow: 
+      0 0 2px #ff0000,
+      0 0 4px #ff0000,
+      0 0 6px #ff0000,
+      0 0 8px #ff0000,
+      0 0 10px #ff0000,
+      0 0 12px #ff0000,
+      0 0 14px #ff0000,
+      0 0 16px #ff0000;
+  }
+  100% {
+    text-shadow: 
+      0 0 1px #ff0000,
+      0 0 2px #ff0000,
+      0 0 3px #ff0000,
+      0 0 4px #ff0000,
+      0 0 5px #ff0000,
+      0 0 6px #ff0000,
+      0 0 7px #ff0000,
+      0 0 8px #ff0000;
+  }
 }
 
 .fadeInDown {
@@ -1414,13 +1551,13 @@ body {
 }
 
 .vs-text {
-  font-weight: 700;
+  font-weight: 400;
   font-size: 13px;
   margin: 0 4px;
 }
 
 .match-date-time {
-  font-weight: 700;
+  font-weight: 400;
   font-size: 13px;
   margin-left: 8px;
 }
@@ -1447,7 +1584,7 @@ body {
   border: none;
   border-radius: 8px;
   padding: 8px 22px;
-  font-weight: 700;
+  font-weight: 400;
   font-size: 15px;
   margin-top: 12px;
   cursor: pointer;
@@ -1671,7 +1808,7 @@ body {
 
 .leaderboard-header {
   color: #ff4d4f;
-  font-weight: 500;
+  font-weight: 400;
   font-size: 16px;
   margin: 16px 0 8px 16px;
   display: flex;
@@ -1695,7 +1832,7 @@ body {
   color: #fff;
   border-radius: 8px;
   padding: 10px 12px;
-  font-weight: 500;
+  font-weight: 400;
   display: flex;
   align-items: center;
   gap: 10px;
@@ -1744,12 +1881,12 @@ body {
 
 .player-name {
   flex: 1;
-  font-weight: 500;
+  font-weight: 400;
 }
 
 .player-wins {
   color: #aaa;
-  font-weight: 500;
+  font-weight: 400;
   font-size: 13px;
 }
 
@@ -1852,7 +1989,7 @@ html,
   width: 100%;
   height: 100%;
   z-index: -1;
-  /* background-color: #131313; */
+  background-color: #131313;
 }
 
 .video-background {
@@ -1862,4 +1999,18 @@ html,
   position: absolute;
   top: 0;
   left: 0;
+}
+
+/*
+Usage: Place <div class="dark-overlay"></div> as a sibling or child of your background element, before your foreground text, inside a relatively positioned container.
+*/
+.dark-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.5);
+  z-index: 1;
+  pointer-events: none;
 }

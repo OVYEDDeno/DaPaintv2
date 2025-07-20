@@ -377,7 +377,7 @@ const styles = {
     minHeight: '100vh',
     background: '#0d1117',
     color: '#fff',
-    fontFamily: 'system-ui, -apple-system, sans-serif',
+    fontFamily: 'anton',
     display: 'flex',
     flexDirection: 'column'
   },

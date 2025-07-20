@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 
-export const Bg = ({ showCard = true }) => {
+export const Bg = ({ showCard = true, children }) => {
   const backgroundImages = [
-    "ur[](https://images.pexels.com/photos/2891884/pexels-photo-2891884.jpeg)",
+    "url(https://images.pexels.com/photos/2891884/pexels-photo-2891884.jpeg)",
   ];
 
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -40,6 +40,8 @@ export const Bg = ({ showCard = true }) => {
           Your browser does not support the video tag.
         </video>
       )}
+      <div className="dark-overlay"></div>
+      {children}
     </div>
   );
 };
