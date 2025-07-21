@@ -11,8 +11,12 @@ const Layout = () => {
   const [winStreak, setWinStreak] = useState(7);
   const [activeFilter, setActiveFilter] = useState('all');
   const [showCard, setShowCard] = useState(true);
+  const [devNavPosition, setDevNavPosition] = useState({ x: 50, y: 50 });
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
   const scrollRef = useRef(null);
   const scrollIntervalRef = useRef(null);
+  const devNavRef = useRef(null);
 
   // Mock data with both types
   const mockMatches = [
@@ -451,6 +455,46 @@ const Layout = () => {
     navigate("/play-token");
   };
 
+  // Dev navigation drag handlers
+  const handleMouseDown = (e) => {
+    if (e.target.closest('.dev-nav-button')) return; // Don't drag when clicking buttons
+    
+    setIsDragging(true);
+    const rect = devNavRef.current.getBoundingClientRect();
+    setDragOffset({
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top
+    });
+  };
+
+  const handleMouseMove = (e) => {
+    if (!isDragging) return;
+    
+    const x = ((e.clientX - dragOffset.x) / window.innerWidth) * 100;
+    const y = ((e.clientY - dragOffset.y) / window.innerHeight) * 100;
+    
+    setDevNavPosition({
+      x: Math.max(0, Math.min(90, x)),
+      y: Math.max(0, Math.min(90, y))
+    });
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+  };
+
+  useEffect(() => {
+    if (isDragging) {
+      document.addEventListener('mousemove', handleMouseMove);
+      document.addEventListener('mouseup', handleMouseUp);
+      
+      return () => {
+        document.removeEventListener('mousemove', handleMouseMove);
+        document.removeEventListener('mouseup', handleMouseUp);
+      };
+    }
+  }, [isDragging, dragOffset]);
+
   return (
     <div className="layout-container">
       {/* Background Component */}
@@ -546,7 +590,16 @@ const Layout = () => {
       )}
 
       {/* Dev Navigation */}
-      <div className="dev-navigation">
+      <div 
+        ref={devNavRef}
+        className="dev-navigation"
+        style={{
+          left: `${devNavPosition.x}%`,
+          top: `${devNavPosition.y}%`,
+          transform: 'translate(-50%, -50%)'
+        }}
+        onMouseDown={handleMouseDown}
+      >
         <div className="dev-nav-title">Dev Nav:</div>
         <button onClick={() => navigate('/')} className="dev-nav-button">Home</button>
         <button onClick={() => navigate('/ads')} className="dev-nav-button">Ads</button>
