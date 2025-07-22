@@ -919,12 +919,16 @@ body {
 }
 
 /* Floating label styles for form inputs */
-.play-input-group {
+.inputGroup {
   position: relative;
   flex: 1;
+  font-family: Anton, sans-serif;
+  margin: 1em 0;
+  max-width: 100%;
+  width: 100%;
 }
 
-.play-input-group input {
+.inputGroup input {
   padding: 17px 1rem;
   outline: 2px solid #ffab00;
   outline-offset: 3px;
@@ -938,13 +942,13 @@ body {
   color: #333;
 }
 
-.play-input-group input:focus {
+.inputGroup input:focus {
   outline-offset: 5px;
   background: #fff;
 }
 
-.play-input-group label,
-.play-input-group .example {
+.inputGroup label,
+.inputGroup .example {
   font-size: 90%;
   position: absolute;
   left: 0;
@@ -956,20 +960,20 @@ body {
   font-family: Anton, sans-serif;
 }
 
-.play-input-group label {
+.inputGroup label {
   top: 50%;
   transform: translateY(-50%);
 }
 
-.play-input-group .example {
+.inputGroup .example {
   opacity: 0;
   visibility: hidden;
   top: 100%;
   transform: translateY(10px);
 }
 
-.play-input-group input:focus ~ label,
-.play-input-group input:valid ~ label {
+.inputGroup input:focus ~ label,
+.inputGroup input:valid ~ label {
   transform: translateY(-50%) scale(0.9);
   top: -2px;
   background: rgba(255, 255, 255, 0.8);
@@ -978,8 +982,7 @@ body {
   color: #FEBF00;
 }
 
-.play-input-group input:focus ~ .example,
-.play-input-group input:valid ~ .example {
+.inputGroup input:focus ~ .example {
   opacity: 1;
   visibility: visible;
   transform: translateY(-50%) scale(0.9);
