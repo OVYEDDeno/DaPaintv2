@@ -54,6 +54,7 @@ const FloatingInput = ({
   name,
   value,
   onChange,
+  onBlur,
   label,
   placeholder,
   example,
