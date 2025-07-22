@@ -5,7 +5,7 @@ const BASE_EMOJI_SET = [
   // Hand/people emojis (with skin tone support)
   '🙌', '👏', '🤸', '🤾', 
   // Face/smileys (no skin tone)
-  '😁', '🤩', '🥳', '😎', '🎉', '🎊','🤑',
+  '😁', '🤩', '🤑', '🥳', '😎', '🎉', '🎊',
   // Sports
   '🏀', '⚽', '🏆', '🏈', '🎾', '🏐', '🏓', '🏸', '🏅', '🥇',
   // Money
@@ -48,23 +48,23 @@ function getRandomEmojis(count) {
 }
 
 const PlayOnDaPaint = () => {
-  const [email, setEmail] = useState("A@a.a");
-  const [submitted, setSubmitted] = useState(false);
-  const [error, setError] = useState("");
+  const [email, setEmail] = useState("");
   const [showFullForm, setShowFullForm] = useState(false);
-  const [emailExists, setEmailExists] = useState(false);
+  const [showSignInForm, setShowSignInForm] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
-    email: "A@a.a",
+    email: "",
     password: "",
     city: "",
     zipcode: "",
     phone: "",
     birthday: "",
     howDidYouHear: "",
-    signupLocation: "form1" // Auto-checkbox for this page
+    signupLocation: "form1"
   });
   const [formErrors, setFormErrors] = useState({});
+  const [error, setError] = useState("");
+  const [forgotMsg, setForgotMsg] = useState("");
 
   // Calculator state
   const [ticketPrice, setTicketPrice] = useState(20);
@@ -119,35 +119,26 @@ const PlayOnDaPaint = () => {
     setEmail(emailValue);
     setFormData(prev => ({ ...prev, email: emailValue }));
     setError("");
+    setShowFullForm(false);
+    setShowSignInForm(false);
+    setForgotMsg("");
   };
 
   const checkEmailExists = async (email) => {
-    // TODO: Replace with actual API endpoint when available
-    // For now, simulate email check
-    try {
-      // Simulate: if email is 'A@a.a', treat as existing
-      if (email.trim().toLowerCase() === 'a@a.a') return true;
-      // const response = await fetch(`${process.env.BACKEND_URL}/api/check-email`, {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify({ email })
-      // });
-      // const result = await response.json();
-      // return result.exists;
-      // Simulate email check - replace with actual API call
-      return false; // Assume email doesn't exist for now
-    } catch (error) {
-      console.error('Error checking email:', error);
-      return false;
-    }
+    // Simulate: if email is 'A@a.a', treat as existing
+    if (email.trim().toLowerCase() === 'a@a.a') return true;
+    return false;
   };
 
   const handleEmailBlur = async () => {
     if (email && email.includes("@")) {
       const exists = await checkEmailExists(email);
-      setEmailExists(exists);
       if (exists) {
+        setShowSignInForm(true);
+        setShowFullForm(false);
+      } else {
         setShowFullForm(true);
+        setShowSignInForm(false);
       }
     }
   };
@@ -156,23 +147,28 @@ const PlayOnDaPaint = () => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
     setFormErrors(prev => ({ ...prev, [name]: "" }));
+    setForgotMsg("");
+  };
+
+  const handleSignIn = async (e) => {
+    e.preventDefault();
+    if (!formData.password) {
+      setFormErrors({ password: "Password is required" });
+      return;
+    }
+    // TODO: Replace with real sign-in logic
+    // Simulate success
+    window.location.href = '/playtoken';
+  };
+
+  const handleForgotPassword = async () => {
+    // TODO: Replace with real API call
+    setForgotMsg("If this email exists, a reset link has been sent.");
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    if (!showFullForm) {
-      // Just email submission
-      if (!email.includes("@")) {
-        setError("Please enter a valid email address.");
-        return;
-      }
-      setSubmitted(true);
-      setError("");
-      return;
-    }
-
-    // Full form submission
+    // Only handle sign-up here
     const errors = {};
     if (!formData.name) errors.name = "Username is required";
     if (!formData.email) errors.email = "Email is required";
@@ -181,37 +177,12 @@ const PlayOnDaPaint = () => {
     if (!formData.zipcode) errors.zipcode = "Zipcode is required";
     if (!formData.phone) errors.phone = "Phone number is required";
     if (!formData.birthday) errors.birthday = "Birthday is required";
-
     if (Object.keys(errors).length > 0) {
       setFormErrors(errors);
       return;
     }
-
-    try {
-      const response = await fetch(`${process.env.BACKEND_URL}/api/signup`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
-      });
-
-      const result = await response.json();
-
-      if (response.ok) {
-        setSubmitted(true);
-        setError("");
-        // Redirect to Play token page
-        window.location.href = '/playtoken';
-      } else {
-        if (result.errors) {
-          setFormErrors(result.errors);
-        } else {
-          setError(result.msg || "Signup failed. Please try again.");
-        }
-      }
-    } catch (error) {
-      console.error('Signup error:', error);
-      setError("System error. Please try again.");
-    }
+    // TODO: Replace with real signup logic
+    window.location.href = '/playtoken';
   };
 
   const grossWeeklyRevenue = ticketPrice * attendees * daPaintsPerWeek;
@@ -253,22 +224,112 @@ const PlayOnDaPaint = () => {
             DaPaint helps sports lovers like you turn playtime into paytime.
             Ready to join the movement?
           </p>
-          <form onSubmit={handleSubmit} className={`play-form ${showFullForm ? 'play-form-expanded' : ''}`}>
-            {!showFullForm ? (
-              <>
-                <input
-                  type="email"
-                  placeholder="Enter your email"
-                  value={email}
-                  onChange={handleEmailChange}
-                  onBlur={handleEmailBlur}
-                  className="play-input"
-                />
-                <button type="submit" className="play-button">
-                  Lock In DaPaint
+          <form
+            onSubmit={
+              showSignInForm
+                ? handleSignIn
+                : showFullForm
+                ? handleSubmit
+                : handleSubmit // allow submit on just email for initial CTA
+            }
+            className={`play-form ${
+              showFullForm || showSignInForm ? 'play-form-expanded' : ''
+            }`}
+          >
+            {/* Email input always shown first */}
+            <div className="play-input-wrapper" style={{ position: "relative", marginBottom: 24 }}>
+              {(email || document.activeElement?.id === "play-email-input") && (
+                <label
+                  htmlFor="play-email-input"
+                  className="play-input-label"
+                  style={{
+                    position: "absolute",
+                    top: -18,
+                    left: 8,
+                    fontSize: 13,
+                    color: "#555",
+                    background: "#fff",
+                    padding: "0 4px",
+                    zIndex: 2,
+                    transition: "all 0.2s"
+                  }}
+                >
+                  Email
+                </label>
+              )}
+              <input
+                id="play-email-input"
+                type="email"
+                placeholder="Enter your email"
+                value={email}
+                onChange={handleEmailChange}
+                onBlur={handleEmailBlur}
+                className="play-input"
+                required
+                disabled={showFullForm || showSignInForm}
+                onFocus={e => e.target.select()}
+                style={{ width: "100%" }}
+              />
+              {/* Example text */}
+              {(document.activeElement?.id === "play-email-input" || email === "") && (
+                <span
+                  className="play-input-example"
+                  style={{
+                    position: "absolute",
+                    left: 10,
+                    bottom: -18,
+                    fontSize: 12,
+                    color: "#888"
+                  }}
+                >
+                  Example: your@email.com
+                </span>
+              )}
+            </div>
+            {/* Restore Lock In DaPaint button for initial email-only state */}
+            {!(showFullForm || showSignInForm) && (
+              <button type="submit" className="play-button-full" style={{ marginTop: 12 }}>
+                Lock In DaPaint
+              </button>
+            )}
+            {/* Show sign-in form if email exists */}
+            {showSignInForm && (
+              <div className="play-signin-form">
+                <div className="play-signin-row">
+                  <input
+                    type="password"
+                    name="password"
+                    placeholder="Password"
+                    value={formData.password}
+                    onChange={handleFormChange}
+                    className="play-form-input"
+                    required
+                    style={{ borderTopRightRadius: 0, borderBottomRightRadius: 0 }}
+                  />
+                  <button
+                    type="submit"
+                    className="play-button-full"
+                    style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}
+                  >
+                    Sign In
+                  </button>
+                </div>
+                {formErrors.password && (
+                  <p className="play-error">{formErrors.password}</p>
+                )}
+                <button
+                  type="button"
+                  className="play-forgot-btn"
+                  style={{ marginTop: 8 }}
+                  onClick={handleForgotPassword}
+                >
+                  Forgot password?
                 </button>
-              </>
-            ) : (
+                {forgotMsg && <p className="play-success">{forgotMsg}</p>}
+              </div>
+            )}
+            {/* Show sign-up form if email does not exist */}
+            {showFullForm && (
               <div className="play-full-form">
                 {/* Username and Phone */}
                 <div className="play-input-pair">
@@ -304,6 +365,7 @@ const PlayOnDaPaint = () => {
                     onChange={handleFormChange}
                     className="play-form-input"
                     required
+                    disabled
                   />
                   <input
                     type="password"
@@ -342,8 +404,8 @@ const PlayOnDaPaint = () => {
                 {formErrors.city && <p className="play-error">{formErrors.city}</p>}
                 {formErrors.zipcode && <p className="play-error">{formErrors.zipcode}</p>}
 
-                {/* Birthday */}
-                <div className="play-input-single">
+                {/* Birthday and How did you hear about us - now inline */}
+                <div className="play-input-pair">
                   <input
                     type="date"
                     name="birthday"
@@ -352,30 +414,20 @@ const PlayOnDaPaint = () => {
                     className="play-form-input"
                     required
                   />
-                </div>
-                {formErrors.birthday && <p className="play-error">{formErrors.birthday}</p>}
-
-                {/* How did you hear about us */}
-                <div className="play-input-single">
-                  <select
+                  <input
+                    type="text"
                     name="howDidYouHear"
+                    placeholder="How did you hear about us?"
                     value={formData.howDidYouHear}
                     onChange={handleFormChange}
                     className="play-form-input"
                     required
-                  >
-                    <option value="">How did you hear about us?</option>
-                    <option value="social_media">Social Media</option>
-                    <option value="friend">Friend/Family</option>
-                    <option value="search">Search Engine</option>
-                    <option value="advertisement">Advertisement</option>
-                    <option value="other">Other</option>
-                  </select>
+                  />
                 </div>
+                {formErrors.birthday && <p className="play-error">{formErrors.birthday}</p>}
+                {formErrors.howDidYouHear && <p className="play-error">{formErrors.howDidYouHear}</p>}
 
-                {/* Hidden signup location */}
                 <input type="hidden" name="signupLocation" value="form1" />
-
                 <button type="submit" className="play-button-full">
                   Lock In DaPaint
                 </button>
@@ -383,16 +435,6 @@ const PlayOnDaPaint = () => {
             )}
           </form>
           {error && <p className="play-error">{error}</p>}
-          {submitted && !showFullForm && (
-            <p className="play-success">
-              Check your inbox to verify and start earning!
-            </p>
-          )}
-          {!showFullForm && (
-            <p className="play-small-text">
-              Already signed up? Enter your email to unlock your account.
-            </p>
-          )}
         </section>
 
         {/* Features Section */}
@@ -428,7 +470,7 @@ const PlayOnDaPaint = () => {
           <div className="play-slider-group">
             <div className="play-slider-item">
               <label className="play-label" htmlFor="ticketPrice">
-                Ticket Price ($1 - $20): <strong>${ticketPrice}</strong>
+                Ticket Price: <strong>${ticketPrice}</strong>
               </label>
               <input
                 id="ticketPrice"
@@ -443,7 +485,7 @@ const PlayOnDaPaint = () => {
 
             <div className="play-slider-item">
               <label className="play-label" htmlFor="attendees">
-                Attendees (1 - 25): <strong>{attendees}</strong>
+                Attendees: <strong>{attendees}</strong>
               </label>
               <input
                 id="attendees"
@@ -458,7 +500,7 @@ const PlayOnDaPaint = () => {
 
             <div className="play-slider-item">
               <label className="play-label" htmlFor="daPaintsPerWeek">
-                DaPaints per Week (1 - 7): <strong>{daPaintsPerWeek}</strong>
+                DaPaints per Week: <strong>{daPaintsPerWeek}</strong>
               </label>
               <input
                 id="daPaintsPerWeek"
