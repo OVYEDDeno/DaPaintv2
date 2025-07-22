@@ -2090,3 +2090,31 @@ Usage: Place <div class="dark-overlay"></div> as a sibling or child of your back
   z-index: 1;
   pointer-events: none;
 }
+/* Add to your CSS */
+.play-signin-row {
+  display: flex;
+  width: 100%;
+}
+.play-signin-row .play-form-input {
+  flex: 1;
+  border-right: none;
+}
+.play-signin-row .play-button-full {
+  flex-shrink: 0;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  margin-left: 0;
+}
+
+.play-input-wrapper {
+  position: relative;
+  margin-bottom: 24px;
+}
+.play-input-label {
+  pointer-events: none;
+  transition: all 0.2s;
+}
+.play-input-example {
+  pointer-events: none;
+  transition: all 0.2s;
+}
