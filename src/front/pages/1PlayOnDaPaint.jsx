@@ -60,68 +60,25 @@ const FloatingInput = ({
   example,
   required = false,
   disabled = false,
-  className = "play-form-input",
+  className = "inputGroup",
   style = {}
 }) => {
-  const [isFocused, setIsFocused] = useState(false);
-  const hasValue = value && value.toString().length > 0;
-  const showLabel = hasValue || isFocused;
-  const showExample = isFocused || !hasValue;
-
   return (
-    <div className="play-input-wrapper" style={{ position: "relative", marginBottom: 24, ...style }}>
-      {showLabel && (
-        <label
-          htmlFor={id}
-          className="play-input-label"
-          style={{
-            position: "absolute",
-            top: -12,
-            right: 12,
-            fontSize: 12,
-            color: "#555",
-            background: "#fff",
-            padding: "0 6px",
-            zIndex: 2,
-            transition: "all 0.2s ease",
-            fontWeight: "500"
-          }}
-        >
-          {label}
-        </label>
-      )}
+    <div className={className} style={style}>
       <input
         id={id}
         type={type}
         name={name}
-        placeholder={!showLabel ? placeholder : ""}
         value={value}
         onChange={onChange}
-        onFocus={() => setIsFocused(true)}
-        onBlur={(e) => {
-          setIsFocused(false);
-          if (onBlur) onBlur(e);
-        }}
-        className={className}
+        onBlur={onBlur}
         required={required}
         disabled={disabled}
-        style={{ width: "100%", ...style }}
+        autoComplete="off"
+        aria-describedby={`${id}-example`}
       />
-      {showExample && example && (
-        <span
-          className="play-input-example"
-          style={{
-            position: "absolute",
-            left: 12,
-            bottom: -18,
-            fontSize: 11,
-            color: "#888",
-            transition: "all 0.2s ease"
-          }}
-        >
-          {example}
-        </span>
-      )}
+      <label htmlFor={id}>{label}</label>
+      <span className="example" id={`${id}-example`}>{example}</span>
     </div>
   );
 };
