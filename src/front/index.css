@@ -994,12 +994,14 @@ body {
   color: #ff5252;
   font-size: 17px;
   margin-top: 8px;
+  font-family: Anton, sans-serif;
 }
 
 .play-success {
   color: #4caf50;
   font-size: 14px;
   margin-top: 8px;
+  font-family: Anton, sans-serif;
 }
 
 .play-features-section {
