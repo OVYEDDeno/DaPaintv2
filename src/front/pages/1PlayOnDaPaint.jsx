@@ -98,7 +98,10 @@ const FloatingInput = ({
         value={value}
         onChange={onChange}
         onFocus={() => setIsFocused(true)}
-        onBlur={() => setIsFocused(false)}
+        onBlur={(e) => {
+          setIsFocused(false);
+          if (onBlur) onBlur(e);
+        }}
         className={className}
         required={required}
         disabled={disabled}
