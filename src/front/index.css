@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Anton:wght@400&display=swap');
+/* Add font-display: swap to the import for better performance */
 
 /* === General Reset === */
 * {
@@ -14,7 +15,7 @@
   --secondary-color: #ffffff;
   --background-color: #000000;
   --transition-speed: 0.2s ease;
-  --border-color: #ffb300;
+  --border-color: #ffab00;
 }
 
 /* === Body Styles === */
@@ -782,7 +783,7 @@ body {
 .play-section {
   max-width: 890px;
   text-align: center;
-  margin-bottom: 120px;
+  margin-bottom: 200px;
 }
 
 .play-title {
@@ -790,13 +791,11 @@ body {
   text-align: center;
   font-size: clamp(2.5rem, 10vw, 110px);
   font-weight: 500;
-  color: #ffb300;
+  color: #ffab00;
   text-shadow: 
-    0 0 2px #ffb300,
-    0 0 4px #ffb300,
-    0 0 6px #ffb300,
-    0 0 8px #ffb300,
-    0 0 10px #ffb300;
+    0 0 2px #ffab00,
+    0 0 4px #ffab00,
+    0 0 6px #ffab00;
   animation: neonPulse 2s ease-in-out infinite alternate;
 }
 
@@ -807,7 +806,7 @@ body {
 }
 
 .play-paragraph {
-  font-size: 34px;
+  font-size: 21px;
   margin-bottom: 24px;
   color: #fff;
   font-weight: 400;
@@ -829,7 +828,7 @@ body {
   position: relative;
   background: #23272f;
   border-radius: 8px;
-  border: 2px solid #ffb300;
+  border: 2px solid #ffab00;
   box-shadow: 0 4px 12px rgba(255, 193, 37, 0.3);
   transition: all 0.3s ease;
 }
@@ -859,7 +858,7 @@ body {
 
 .play-button {
   padding: 16px 24px;
-  background: #ffb300;
+  background: #ffab00;
   color: #000;
   border: none;
   border-radius: 0 6px 6px 0;
@@ -871,7 +870,7 @@ body {
 }
 
 .play-button:hover {
-  background: #FFD700;
+  background: #ffab00;
   transform: translateY(-1px);
   box-shadow: 0 4px 8px rgba(255, 193, 37, 0.4);
 }
@@ -910,13 +909,13 @@ body {
 }
 
 .play-form-input:focus {
-  border-color: #ffb300;
+  border-color: #ffab00;
   box-shadow: 0 0 0 2px rgba(255, 193, 37, 0.2);
 }
 
 .play-button-full {
   padding: 16px 24px;
-  background: #ffb300;
+  background: #ffab00;
   color: #000;
   border: none;
   border-radius: 6px;
@@ -928,7 +927,7 @@ body {
 }
 
 .play-button-full:hover {
-  background: #FFD700;
+  background: #ffab00;
   transform: translateY(-1px);
   box-shadow: 0 4px 8px rgba(255, 193, 37, 0.4);
 }
@@ -1100,9 +1099,7 @@ body {
     text-shadow: 
       0 0 1px #FFA500,
       0 0 2px #FFA500,
-      0 0 3px #FFA500,
-      0 0 4px #FFA500,
-      0 0 5px #FFA500 !important;
+      0 0 3px #FFA500 !important;
   }
   
   /* Reduce emoji count and spacing on mobile */
@@ -1214,16 +1211,9 @@ body {
   /* Medium screen neon effect - subtle */
   .play-title {
     text-shadow: 
-      0 0 1px #FFA500,
-      0 0 2px #FFA500,
-      0 0 3px #FFA500,
-      0 0 4px #FFA500,
-      0 0 5px #FFA500,
-      0 0 6px #FFA500,
-      0 0 7px #FFA500,
-      0 0 8px #FFA500,
-      0 0 9px #FFA500,
-      0 0 10px #FFA500 !important;
+      0 0 21px #FFA500,
+      0 0 34px #FFA500,
+      0 0 51px #FFA500 !important;
   }
   
   .win-streak-container {
@@ -1276,19 +1266,19 @@ body {
 @keyframes neonPulse {
   0% {
     text-shadow: 
-      0 0 2px #ffb300,
-      0 0 4px #ffb300,
-      0 0 6px #ffb300,
-      0 0 8px #ffb300,
-      0 0 10px #ffb300;
+      0 0 2px #ffab00,
+      0 0 4px #ffab00,
+      0 0 6px #ffab00,
+      0 0 8px #ffab00,
+      0 0 10px #ffab00;
   }
   100% {
     text-shadow: 
-      0 0 1px #ffb300,
-      0 0 2px #ffb300,
-      0 0 3px #ffb300,
-      0 0 4px #ffb300,
-      0 0 5px #ffb300;
+      0 0 1px #ffab00,
+      0 0 2px #ffab00,
+      0 0 3px #ffab00,
+      0 0 4px #ffab00,
+      0 0 5px #ffab00;
   }
 }
 
@@ -1950,7 +1940,7 @@ body {
 }
 
 .player-rank.gold {
-  color: #ffb300;
+  color: #ffab00;
 }
 
 .player-rank.silver {

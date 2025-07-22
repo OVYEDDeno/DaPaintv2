@@ -1,9 +1,30 @@
 import React, { useState } from "react";
 
 // Emojis for overlay
-const EMOJI_SET = [
-  '🏀', '⚽', '🏆', '💸', '🎉', '😁', '🥇', '🤩', '🎊', '🏈', '🎾', '🥳', '💰', '🙌', '🔥', '🏅', '🤸', '🏐', '🏓', '🏸', '⛹️', '🤾', '🤑', '😎', '👏'
+const BASE_EMOJI_SET = [
+  // Hand/people emojis (with skin tone support)
+  '🙌', '👏', '🤸', '🤾', 
+  // Face/smileys (no skin tone)
+  '😁', '🤩', '🥳', '😎', '🎉', '🎊','🤑',
+  // Sports
+  '🏀', '⚽', '🏆', '🏈', '🎾', '🏐', '🏓', '🏸', '🏅', '🥇',
+  // Money
+  '💸', '💰',
+  // Fire
+  '🔥'
 ];
+
+// Skin tone modifiers
+const SKIN_TONES = [
+  '\u{1F3FB}', // light
+  '\u{1F3FC}', // medium-light
+  '\u{1F3FD}', // medium
+  '\u{1F3FE}', // medium-dark
+  '\u{1F3FF}'  // dark
+];
+
+// Emojis that support skin tones
+const SKIN_TONE_EMOJIS = new Set(['🙌', '👏', '🤸', '🤾', '🤑']);
 
 function getRandomInt(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -12,20 +33,29 @@ function getRandomInt(min, max) {
 function getRandomEmojis(count) {
   const arr = [];
   for (let i = 0; i < count; i++) {
-    arr.push(EMOJI_SET[getRandomInt(0, EMOJI_SET.length - 1)]);
+    let emoji = BASE_EMOJI_SET[getRandomInt(0, BASE_EMOJI_SET.length - 1)];
+    if (SKIN_TONE_EMOJIS.has(emoji)) {
+      // Randomly pick a skin tone
+      const skinTone = SKIN_TONES[getRandomInt(0, SKIN_TONES.length - 1)];
+      // Combine emoji and skin tone using code points
+      emoji = emoji + skinTone;
+      // Use String.fromCodePoint for correct rendering
+      emoji = String.fromCodePoint(...[...emoji].map(c => c.codePointAt(0)));
+    }
+    arr.push(emoji);
   }
   return arr;
 }
 
 const PlayOnDaPaint = () => {
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState("A@a.a");
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState("");
   const [showFullForm, setShowFullForm] = useState(false);
   const [emailExists, setEmailExists] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
-    email: "",
+    email: "A@a.a",
     password: "",
     city: "",
     zipcode: "",
@@ -46,53 +76,43 @@ const PlayOnDaPaint = () => {
   const STRIPE_PERCENT = 0.029;
   const STRIPE_FLAT_FEE = 0.3;
 
-  // Emoji overlay logic - fewer emojis on mobile
-  const isMobile = window.innerWidth <= 768;
-  const emojiCount = isMobile ? getRandomInt(2, 4) : getRandomInt(4, 8);
-  const emojis = React.useMemo(() => getRandomEmojis(emojiCount), [emojiCount]);
+  // Emoji overlay logic - always 4 emojis
+  const emojiCount = 4;
+  const emojis = React.useMemo(() => getRandomEmojis(emojiCount), []);
 
     // Create layered emoji positions with z-index for behind/in front of text
   const emojiPositions = React.useMemo(() => {
     const positions = [];
-    
     // Calculate emoji size - 68% bigger than before
-    const baseEmojiSize = isMobile ? 20 : 40; // Previous base emoji size
-    const emojiSize = Math.floor(baseEmojiSize * 1.68); // 68% bigger
-    
+    const baseEmojiSize = 40;
+    const emojiSize = Math.floor(baseEmojiSize * 1.68);
     // Create a wide grid that spans the full title width
     const gridCols = 8; // More columns for wider distribution
     const gridRows = Math.ceil(emojiCount / gridCols);
-    
     // Calculate spacing to ensure proper margin between emojis
     const emojiSizeInPercent = (emojiSize / 16) * 2; // Conversion to percentage
     const minSpacing = 8; // Minimum spacing in percentage
     const totalSpacing = emojiSizeInPercent + minSpacing;
-    
     const sectionWidth = Math.max(100 / gridCols, totalSpacing);
-    const sectionHeight = Math.max((isMobile ? 40 : 60) / gridRows, totalSpacing);
-    
+    const sectionHeight = Math.max(60 / gridRows, totalSpacing);
     for (let i = 0; i < emojiCount; i++) {
       const row = Math.floor(i / gridCols);
       const col = i % gridCols;
-      
       // Add small randomness but keep emojis in their designated sections
       const randomX = getRandomInt(2, Math.max(2, sectionWidth - totalSpacing - 2));
       const randomY = getRandomInt(2, Math.max(2, sectionHeight - totalSpacing - 2));
-      
       // Simple z-index distribution - just alternate between behind and front
       const zIndex = (i % 2 === 0) ? 1 : 3; // Even = behind, odd = front
-      
-              positions.push({
-          top: `${row * sectionHeight + randomY}%`,
-          left: `${col * sectionWidth + randomX}%`,
-          fontSize: `${emojiSize}px`,
-          rotate: `${getRandomInt(-25, 25)}deg`,
-          zIndex: zIndex,
-        });
+      positions.push({
+        top: `${row * sectionHeight + randomY}%`,
+        left: `${col * sectionWidth + randomX}%`,
+        fontSize: `${emojiSize}px`,
+        rotate: `${getRandomInt(-25, 25)}deg`,
+        zIndex: zIndex,
+      });
     }
-    
     return positions;
-  }, [emojiCount, isMobile]);
+  }, [emojiCount]);
 
   const handleEmailChange = (e) => {
     const emailValue = e.target.value;
@@ -105,6 +125,8 @@ const PlayOnDaPaint = () => {
     // TODO: Replace with actual API endpoint when available
     // For now, simulate email check
     try {
+      // Simulate: if email is 'A@a.a', treat as existing
+      if (email.trim().toLowerCase() === 'a@a.a') return true;
       // const response = await fetch(`${process.env.BACKEND_URL}/api/check-email`, {
       //   method: 'POST',
       //   headers: { 'Content-Type': 'application/json' },
@@ -112,7 +134,6 @@ const PlayOnDaPaint = () => {
       // });
       // const result = await response.json();
       // return result.exists;
-      
       // Simulate email check - replace with actual API call
       return false; // Assume email doesn't exist for now
     } catch (error) {
@@ -125,7 +146,7 @@ const PlayOnDaPaint = () => {
     if (email && email.includes("@")) {
       const exists = await checkEmailExists(email);
       setEmailExists(exists);
-      if (!exists) {
+      if (exists) {
         setShowFullForm(true);
       }
     }
