@@ -826,11 +826,17 @@ body {
   max-width: 400px;
   margin: 0 auto;
   position: relative;
-  background: #23272f;
-  border-radius: 8px;
-  border: 2px solid #ffab00;
-  box-shadow: 0 4px 12px rgba(255, 193, 37, 0.3);
+  background: #f5f5f5;
+  border-radius: 30px;
+  outline: 2px solid #ffab00;
+  outline-offset: 3px;
+  box-shadow: 0 4px 12px rgba(255, 171, 0, 0.3);
   transition: all 0.3s ease;
+  font-family: Anton, sans-serif;
+}
+
+.play-form:focus-within {
+  outline-offset: 5px;
 }
 
 .play-form-expanded {
@@ -840,37 +846,41 @@ body {
 }
 
 .play-input {
-  padding: 16px 20px;
+  padding: 17px 20px;
   border: none;
-  border-radius: 6px 0 0 6px;
-  font-size: 16px;
+  border-radius: 30px 0 0 30px;
+  font-size: 17px;
   flex: 1;
-  background: transparent;
-  color: #fff;
+  background: #e3e3e3;
+  color: #333;
   outline: none;
   font-weight: 400;
+  transition: background 0.25s;
+}
+
+.play-input:focus {
+  background: #fff;
 }
 
 .play-input::placeholder {
-  color: #aaa;
+  color: #666;
   font-weight: 400;
 }
 
-.play-button {
-  padding: 16px 24px;
+.play-button-full {
+  padding: 17px 24px;
   background: #ffab00;
   color: #000;
   border: none;
-  border-radius: 0 6px 6px 0;
+  border-radius: 0 30px 30px 0;
   cursor: pointer;
-  font-size: 16px;
+  font-size: 17px;
   font-weight: 600;
   transition: all 0.2s ease;
-  white-space: nowrap;
 }
 
-.play-button:hover {
-  background: #ffab00;
+.play-button-full:hover {
+  background: #FEBF00;
   transform: translateY(-1px);
   box-shadow: 0 4px 8px rgba(255, 193, 37, 0.4);
 }
@@ -887,49 +897,97 @@ body {
   gap: 12px;
 }
 
-.play-input-single {
-  width: 100%;
-}
-
 .play-form-input {
-  padding: 16px 20px;
-  border: 1px solid #444;
-  border-radius: 6px;
-  font-size: 16px;
-  background: #1a1d23;
-  color: #fff;
-  outline: none;
+  padding: 17px 20px;
+  outline: 2px solid #ffab00;
+  outline-offset: 3px;
+  border: none;
+  background: #e3e3e3;
+  border-radius: 30px;
+  font-size: 17px;
+  color: #333;
   font-weight: 400;
   flex: 1;
-}
-
-.play-form-input::placeholder {
-  color: #aaa;
-  font-weight: 400;
+  position: relative;
+  box-sizing: border-box;
+  transition: outline-offset 0.25s, background 0.25s;
 }
 
 .play-form-input:focus {
-  border-color: #ffab00;
-  box-shadow: 0 0 0 2px rgba(255, 193, 37, 0.2);
+  outline-offset: 5px;
+  background: #fff;
 }
 
-.play-button-full {
-  padding: 16px 24px;
-  background: #ffab00;
-  color: #000;
+/* Floating label styles for form inputs */
+.play-input-group {
+  position: relative;
+  flex: 1;
+}
+
+.play-input-group input {
+  padding: 17px 1rem;
+  outline: 2px solid #ffab00;
+  outline-offset: 3px;
   border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 16px;
-  font-weight: 600;
-  transition: all 0.2s ease;
-  margin-top: 8px;
+  background: #e3e3e3;
+  border-radius: 30px;
+  width: 100%;
+  box-sizing: border-box;
+  transition: outline-offset 0.25s, background 0.25s;
+  font-size: 17px;
+  color: #333;
 }
 
-.play-button-full:hover {
-  background: #ffab00;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 8px rgba(255, 193, 37, 0.4);
+.play-input-group input:focus {
+  outline-offset: 5px;
+  background: #fff;
+}
+
+.play-input-group label,
+.play-input-group .example {
+  font-size: 90%;
+  position: absolute;
+  left: 0;
+  padding: 0.3em 0.5em;
+  margin-left: 0.8em;
+  color: #333;
+  pointer-events: none;
+  transition: transform 0.25s ease-in-out, opacity 0.25s ease-in-out;
+  font-family: Anton, sans-serif;
+}
+
+.play-input-group label {
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.play-input-group .example {
+  opacity: 0;
+  visibility: hidden;
+  top: 100%;
+  transform: translateY(10px);
+}
+
+.play-input-group input:focus ~ label,
+.play-input-group input:valid ~ label {
+  transform: translateY(-50%) scale(0.9);
+  top: -2px;
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
+  border-radius: 10px;
+  color: #FEBF00;
+}
+
+.play-input-group input:focus ~ .example,
+.play-input-group input:valid ~ .example {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(-50%) scale(0.9);
+  top: calc(100% + 2px);
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
+  border-radius: 10px;
+  color: #FEBF00;
 }
 
 .play-error {
