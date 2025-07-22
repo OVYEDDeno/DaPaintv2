@@ -867,6 +867,18 @@ body {
   font-weight: 400;
 }
 
+/* Special styling for inputGroup inside play-form */
+.play-form .inputGroup {
+  margin: 0;
+  flex: 1;
+}
+
+.play-form .inputGroup input {
+  outline: none;
+  border-radius: 30px 0 0 30px;
+  background: transparent;
+}
+
 .play-button-full {
   padding: 17px 24px;
   background: #ffab00;
