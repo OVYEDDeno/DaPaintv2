@@ -2112,9 +2112,26 @@ Usage: Place <div class="dark-overlay"></div> as a sibling or child of your back
 }
 .play-input-label {
   pointer-events: none;
-  transition: all 0.2s;
+  transition: all 0.2s ease;
+  background: #fff;
+  border-radius: 2px;
+  font-weight: 500;
 }
 .play-input-example {
   pointer-events: none;
-  transition: all 0.2s;
+  transition: all 0.2s ease;
+  font-style: italic;
+}
+
+/* Ensure proper spacing for floating labels */
+.play-input-pair .play-input-wrapper {
+  flex: 1;
+}
+
+.play-input-pair .play-input-wrapper:first-child {
+  margin-right: 8px;
+}
+
+.play-input-pair .play-input-wrapper:last-child {
+  margin-left: 8px;
 }
