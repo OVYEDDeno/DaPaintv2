@@ -285,7 +285,8 @@ const PlayOnDaPaint = () => {
               example="Example: your@email.com"
               required
               disabled={showFullForm || showSignInForm}
-              className="play-input"
+              className="inputGroup"
+              style={{ margin: 0, flex: 1 }}
             />
             {/* Restore Lock In DaPaint button for initial email-only state */}
             {!(showFullForm || showSignInForm) && (
