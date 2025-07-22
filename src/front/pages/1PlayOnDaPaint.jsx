@@ -296,31 +296,22 @@ const PlayOnDaPaint = () => {
             {/* Show sign-in form if email exists */}
             {showSignInForm && (
               <div className="play-signin-form">
-                <div className="play-signin-row">
-                  <FloatingInput
-                    id="signin-password"
-                    type="password"
-                    name="password"
-                    value={formData.password}
-                    onChange={handleFormChange}
-                    label="Password"
-                    placeholder="Enter your password"
-                    example="Example: mySecurePass123"
-                    required
-                    className="play-form-input"
-                    style={{ borderTopRightRadius: 0, borderBottomRightRadius: 0, marginBottom: 0 }}
-                  />
-                  <button
-                    type="submit"
-                    className="play-button-full"
-                    style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}
-                  >
-                    Sign In
-                  </button>
-                </div>
+                <FloatingInput
+                  id="signin-password"
+                  type="password"
+                  name="password"
+                  value={formData.password}
+                  onChange={handleFormChange}
+                  label="Password"
+                  example="Example: mySecurePass123"
+                  required
+                />
                 {formErrors.password && (
                   <p className="play-error">{formErrors.password}</p>
                 )}
+                <button type="submit" className="play-button-full" style={{ marginTop: 8 }}>
+                  Sign In
+                </button>
                 <button
                   type="button"
                   className="play-forgot-btn"
