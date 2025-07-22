@@ -2106,32 +2106,88 @@ Usage: Place <div class="dark-overlay"></div> as a sibling or child of your back
   margin-left: 0;
 }
 
-.play-input-wrapper {
+/* Input Group Styling - Based on provided design */
+.inputGroup {
+  font-family: Anton, sans-serif;
+  margin: 1em 0;
+  max-width: 100%;
+  width: 100%;
   position: relative;
-  margin-bottom: 24px;
-}
-.play-input-label {
-  pointer-events: none;
-  transition: all 0.2s ease;
-  background: #fff;
-  border-radius: 2px;
-  font-weight: 500;
-}
-.play-input-example {
-  pointer-events: none;
-  transition: all 0.2s ease;
-  font-style: italic;
 }
 
-/* Ensure proper spacing for floating labels */
-.play-input-pair .play-input-wrapper {
+.inputGroup input {
+  padding: 17px 1rem;
+  outline: 2px solid #ffab00;
+  outline-offset: 3px;
+  border: none;
+  background: #e3e3e3;
+  border-radius: 30px;
+  width: 100%;
+  box-sizing: border-box;
+  transition: outline-offset 0.25s, background 0.25s;
+  font-size: 17px;
+}
+
+.inputGroup input:focus {
+  outline-offset: 5px;
+  background: #fff;
+}
+
+.inputGroup label,
+.inputGroup .example {
+  font-size: 90%;
+  position: absolute;
+  left: 0;
+  padding: 0.3em 0.5em;
+  margin-left: 0.8em;
+  color: #333;
+  pointer-events: none;
+  transition: transform 0.25s ease-in-out, opacity 0.25s ease-in-out;
+}
+
+.inputGroup label {
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.inputGroup .example {
+  opacity: 0;
+  visibility: hidden;
+  top: 100%;
+  transform: translateY(10px);
+}
+
+.inputGroup input:focus ~ label,
+.inputGroup input:valid ~ label {
+  transform: translateY(-50%) scale(0.9);
+  top: -2px;
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
+  border-radius: 10px;
+  color: #FEBF00;
+}
+
+.inputGroup input:focus ~ .example,
+.inputGroup input:valid ~ .example {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(-50%) scale(0.9);
+  top: calc(100% + 2px);
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
+  border-radius: 10px;
+  color: #FEBF00;
+}
+
+/* Ensure proper spacing for input pairs */
+.play-input-pair .inputGroup {
   flex: 1;
 }
 
-.play-input-pair .play-input-wrapper:first-child {
+.play-input-pair .inputGroup:first-child {
   margin-right: 8px;
 }
 
-.play-input-pair .play-input-wrapper:last-child {
+.play-input-pair .inputGroup:last-child {
   margin-left: 8px;
 }
