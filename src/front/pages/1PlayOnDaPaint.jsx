@@ -290,7 +290,7 @@ const PlayOnDaPaint = () => {
             />
             {/* Restore Lock In DaPaint button for initial email-only state */}
             {!(showFullForm || showSignInForm) && (
-              <button type="submit" className="play-button-full" style={{ marginTop: 12 }}>
+              <button type="submit" className="play-button-full">
                 Lock In DaPaint
               </button>
             )}
