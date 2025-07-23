@@ -47,6 +47,42 @@ function getRandomEmojis(count) {
   return arr;
 }
 
+// Reusable input component with floating label and example
+const FloatingInput = ({
+  id,
+  type = "text",
+  name,
+  value,
+  onChange,
+  onBlur,
+  label,
+  placeholder,
+  example,
+  required = false,
+  disabled = false,
+  className = "inputGroup",
+  style = {}
+}) => {
+  return (
+    <div className={className} style={style}>
+      <input
+        id={id}
+        type={type}
+        name={name}
+        value={value}
+        onChange={onChange}
+        onBlur={onBlur}
+        required={required}
+        disabled={disabled}
+        autoComplete="off"
+        aria-describedby={`${id}-example`}
+      />
+      <label htmlFor={id}>{label}</label>
+      <span className="example" id={`${id}-example`}>{example}</span>
+    </div>
+  );
+};
+
 const PlayOnDaPaint = () => {
   const [email, setEmail] = useState("");
   const [showFullForm, setShowFullForm] = useState(false);
@@ -237,86 +273,46 @@ const PlayOnDaPaint = () => {
             }`}
           >
             {/* Email input always shown first */}
-            <div className="play-input-wrapper" style={{ position: "relative", marginBottom: 24 }}>
-              {(email || document.activeElement?.id === "play-email-input") && (
-                <label
-                  htmlFor="play-email-input"
-                  className="play-input-label"
-                  style={{
-                    position: "absolute",
-                    top: -18,
-                    left: 8,
-                    fontSize: 13,
-                    color: "#555",
-                    background: "#fff",
-                    padding: "0 4px",
-                    zIndex: 2,
-                    transition: "all 0.2s"
-                  }}
-                >
-                  Email
-                </label>
-              )}
-              <input
-                id="play-email-input"
-                type="email"
-                placeholder="Enter your email"
-                value={email}
-                onChange={handleEmailChange}
-                onBlur={handleEmailBlur}
-                className="play-input"
-                required
-                disabled={showFullForm || showSignInForm}
-                onFocus={e => e.target.select()}
-                style={{ width: "100%" }}
-              />
-              {/* Example text */}
-              {(document.activeElement?.id === "play-email-input" || email === "") && (
-                <span
-                  className="play-input-example"
-                  style={{
-                    position: "absolute",
-                    left: 10,
-                    bottom: -18,
-                    fontSize: 12,
-                    color: "#888"
-                  }}
-                >
-                  Example: your@email.com
-                </span>
-              )}
-            </div>
+            <FloatingInput
+              id="play-email-input"
+              type="email"
+              name="email"
+              value={email}
+              onChange={handleEmailChange}
+              onBlur={handleEmailBlur}
+              label="Email Address"
+              placeholder="Enter your email"
+              example="Example: your@email.com"
+              required
+              disabled={showFullForm || showSignInForm}
+              className="inputGroup"
+              style={{ margin: 0, flex: 1 }}
+            />
             {/* Restore Lock In DaPaint button for initial email-only state */}
             {!(showFullForm || showSignInForm) && (
-              <button type="submit" className="play-button-full" style={{ marginTop: 12 }}>
+              <button type="submit" className="play-button-full">
                 Lock In DaPaint
               </button>
             )}
             {/* Show sign-in form if email exists */}
             {showSignInForm && (
               <div className="play-signin-form">
-                <div className="play-signin-row">
-                  <input
-                    type="password"
-                    name="password"
-                    placeholder="Password"
-                    value={formData.password}
-                    onChange={handleFormChange}
-                    className="play-form-input"
-                    required
-                    style={{ borderTopRightRadius: 0, borderBottomRightRadius: 0 }}
-                  />
-                  <button
-                    type="submit"
-                    className="play-button-full"
-                    style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}
-                  >
-                    Sign In
-                  </button>
-                </div>
+                <FloatingInput
+                  id="signin-password"
+                  type="password"
+                  name="password"
+                  value={formData.password}
+                  onChange={handleFormChange}
+                  label="Password"
+                  example="Example: mySecurePass123"
+                  required
+                />
                 {formErrors.password && (
                   <p className="play-error">{formErrors.password}</p>
                 )}
+                <button type="submit" className="play-button-full" style={{ marginTop: 8 }}>
+                  Sign In
+                </button>
                 <button
                   type="button"
                   className="play-forgot-btn"
@@ -333,22 +329,26 @@ const PlayOnDaPaint = () => {
               <div className="play-full-form">
                 {/* Username and Phone */}
                 <div className="play-input-pair">
-                  <input
+                  <FloatingInput
+                    id="signup-name"
                     type="text"
                     name="name"
-                    placeholder="Username/Creative alias"
                     value={formData.name}
                     onChange={handleFormChange}
-                    className="play-form-input"
+                    label="Username"
+                    placeholder="Username/Creative alias"
+                    example="Example: SportsChamp23"
                     required
                   />
-                  <input
+                  <FloatingInput
+                    id="signup-phone"
                     type="tel"
                     name="phone"
-                    placeholder="Phone Number"
                     value={formData.phone}
                     onChange={handleFormChange}
-                    className="play-form-input"
+                    label="Phone Number"
+                    placeholder="Phone Number"
+                    example="Example: (555) 123-4567"
                     required
                   />
                 </div>
@@ -357,23 +357,27 @@ const PlayOnDaPaint = () => {
 
                 {/* Email and Password */}
                 <div className="play-input-pair">
-                  <input
+                  <FloatingInput
+                    id="signup-email"
                     type="email"
                     name="email"
-                    placeholder="Your Email"
                     value={formData.email}
                     onChange={handleFormChange}
-                    className="play-form-input"
+                    label="Email Address"
+                    placeholder="Your Email"
+                    example="Example: your@email.com"
                     required
                     disabled
                   />
-                  <input
+                  <FloatingInput
+                    id="signup-password"
                     type="password"
                     name="password"
-                    placeholder="Password"
                     value={formData.password}
                     onChange={handleFormChange}
-                    className="play-form-input"
+                    label="Password"
+                    placeholder="Create Password"
+                    example="Example: mySecurePass123"
                     required
                   />
                 </div>
@@ -382,22 +386,26 @@ const PlayOnDaPaint = () => {
 
                 {/* City and Zipcode */}
                 <div className="play-input-pair">
-                  <input
+                  <FloatingInput
+                    id="signup-city"
                     type="text"
                     name="city"
-                    placeholder="City"
                     value={formData.city}
                     onChange={handleFormChange}
-                    className="play-form-input"
+                    label="City"
+                    placeholder="Your City"
+                    example="Example: New York"
                     required
                   />
-                  <input
+                  <FloatingInput
+                    id="signup-zipcode"
                     type="text"
                     name="zipcode"
-                    placeholder="Zipcode"
                     value={formData.zipcode}
                     onChange={handleFormChange}
-                    className="play-form-input"
+                    label="Zipcode"
+                    placeholder="Zipcode"
+                    example="Example: 10001"
                     required
                   />
                 </div>
@@ -406,21 +414,26 @@ const PlayOnDaPaint = () => {
 
                 {/* Birthday and How did you hear about us - now inline */}
                 <div className="play-input-pair">
-                  <input
+                  <FloatingInput
+                    id="signup-birthday"
                     type="date"
                     name="birthday"
                     value={formData.birthday}
                     onChange={handleFormChange}
-                    className="play-form-input"
+                    label="Birthday"
+                    placeholder="Your Birthday"
+                    example="Select your birth date"
                     required
                   />
-                  <input
+                  <FloatingInput
+                    id="signup-source"
                     type="text"
                     name="howDidYouHear"
-                    placeholder="How did you hear about us?"
                     value={formData.howDidYouHear}
                     onChange={handleFormChange}
-                    className="play-form-input"
+                    label="How did you hear about us?"
+                    placeholder="How did you hear about us?"
+                    example="Example: Social media, friend, etc."
                     required
                   />
                 </div>
@@ -540,11 +553,14 @@ const PlayOnDaPaint = () => {
             Winners Don't Just Play Sports… They Profit!
           </h2>
           <form onSubmit={handleSubmit} className="play-form">
-            <input
+            <FloatingInput
+              id="cta-email"
               type="email"
-              placeholder="Enter your email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              label="Email Address"
+              placeholder="Enter your email"
+              example="Example: your@email.com"
               className="play-input"
             />
             <button type="submit" className="play-button">

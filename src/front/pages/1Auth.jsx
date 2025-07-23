@@ -49,8 +49,8 @@ export const Auth = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const url = isLogin
-      ? process.env.BACKEND_URL + "/api/login"
-      : process.env.BACKEND_URL + "/api/signup";
+      ? import.meta.env.VITE_BACKEND_URL + "/api/login"
+      : import.meta.env.VITE_BACKEND_URL + "/api/signup";
 
     try {
       const response = await fetch(url, {
@@ -128,7 +128,7 @@ export const Auth = () => {
 
   const handleForgotPassword = async (e) => {
     e.preventDefault();
-    const url = process.env.BACKEND_URL + "/api/forgot-password";
+    const url = import.meta.env.VITE_BACKEND_URL + "/api/forgot-password";
     const response = await fetch(url, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -152,7 +152,7 @@ export const Auth = () => {
     async function getPublicDapaintList() {
       try {
         const response = await fetch(
-          `${process.env.BACKEND_URL}/api/public-lineup`,
+          `${import.meta.env.VITE_BACKEND_URL}/api/public-lineup`,
           {
             method: "GET",
             headers: {
@@ -180,7 +180,7 @@ export const Auth = () => {
   useEffect(() => {
     async function fetchUsers() {
       try {
-        const response = await fetch(`${process.env.BACKEND_URL}/api/city`, {
+        const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/city`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -206,7 +206,7 @@ export const Auth = () => {
   useEffect(() => {
     async function fetchDonePaints() {
       try {
-        const response = await fetch(`${process.env.BACKEND_URL}/api/done`, {
+        const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/done`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
