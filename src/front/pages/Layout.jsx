@@ -552,15 +552,15 @@ const Layout = () => {
         <button
           onClick={handleLeftToggle}
           className={`header-action-btn ${leftToggle ? 'active' : ''}`}
-          aria-label={leftToggle ? 'Log Out DaPaint' : 'Lock In DaPaint'}
-          title={leftToggle ? 'Log Out DaPaint' : 'Lock In DaPaint'}
+          aria-label={leftToggle ? 'DaPaint Tutorial' : 'DaPaint Tutorial'}
+          title={leftToggle ? 'DaPaint Tutorial' : 'DaPaint Tutorial'}
         >
           <span className="header-btn-text">{leftToggle ? (
-            <span>😞</span>
+            <span>⁉️</span>
           ) : (
-            <span>🔒</span>
+            <span>⁉️</span>
           )}</span>
-          <span className="header-btn-label">{leftToggle ? 'Log Out DaPaint' : 'Lock In DaPaint'}</span>
+          <span className="header-btn-label">{leftToggle ? 'DaPaint Tutorial' : 'DaPaint Tutorial'}</span>
         </button>
       </header>
 
