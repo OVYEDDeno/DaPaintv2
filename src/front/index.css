@@ -1378,19 +1378,19 @@ body {
 @keyframes neonPulse {
   0% {
     text-shadow:
-      0 0 2px #ffcc02,
-      0 0 4px #ffcc02,
-      0 0 6px #ffcc02,
-      0 0 8px #ffcc02,
-      0 0 10px #ffcc02;
+      0 0 2px #FF8000,
+      0 0 4px #FF8000,
+      0 0 6px #FF8000,
+      0 0 8px #FF8000,
+      0 0 10px #FF8000;
   }
   100% {
     text-shadow:
-      0 0 1px #ffcc02,
-      0 0 2px #ffcc02,
-      0 0 3px #ffcc02,
-      0 0 4px #ffcc02,
-      0 0 5px #ffcc02;
+      0 0 1px #FF8000,
+      0 0 2px #FF8000,
+      0 0 3px #FF8000,
+      0 0 4px #FF8000,
+      0 0 5px #FF8000;
   }
 }
 
