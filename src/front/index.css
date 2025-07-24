@@ -903,6 +903,7 @@ body {
 
 .play-button-full:hover {
   background: #FEBF00;
+  border-color: #FEBF00;
   transform: translateY(-1px);
   box-shadow: 0 4px 8px rgba(255, 193, 37, 0.4);
 }
