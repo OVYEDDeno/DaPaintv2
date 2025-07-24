@@ -791,11 +791,11 @@ body {
   text-align: center;
   font-size: clamp(2.5rem, 10vw, 110px);
   font-weight: 500;
-  color: #FFA500;
+  color: #FEBF00;
   text-shadow:
-    0 0 2px #FFA500,
-    0 0 4px #FFA500,
-    0 0 6px #FFA500;
+    0 0 2px #FEBF00,
+    0 0 4px #FEBF00,
+    0 0 6px #FEBF00;
   animation: neonPulse 2s ease-in-out infinite alternate;
 }
 
