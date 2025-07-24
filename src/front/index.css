@@ -995,13 +995,15 @@ body {
 }
 
 .inputGroup input:focus ~ label,
-.inputGroup input:valid ~ label {
+.inputGroup input:valid ~ label,
+.inputGroup input:not(:placeholder-shown) ~ label {
   transform: translateY(-50%) scale(0.9);
   top: -2px;
-  background: rgba(255, 255, 255, 0.8);
+  background: rgba(255, 255, 255, 0.9);
   backdrop-filter: blur(10px);
   border-radius: 10px;
   color: #FEBF00;
+  z-index: 1;
 }
 
 .inputGroup input:focus ~ .example {
