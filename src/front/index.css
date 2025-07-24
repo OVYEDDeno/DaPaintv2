@@ -893,8 +893,8 @@ body {
   padding: 17px 24px;
   background: #ffab00;
   color: #000;
-  border: none;
-  border-radius: 0 30px 30px 0;
+  border: 3px solid #ffab00;
+  border-radius: 30px;
   cursor: pointer;
   font-size: 17px;
   font-weight: 600;
