@@ -2242,28 +2242,6 @@ Usage: Place <div class="dark-overlay"></div> as a sibling or child of your back
   transform: translateY(10px);
 }
 
-.inputGroup input:focus ~ label,
-.inputGroup input:valid ~ label {
-  transform: translateY(-50%) scale(0.9);
-  top: -2px;
-  background: rgba(255, 255, 255, 0.8);
-  backdrop-filter: blur(10px);
-  border-radius: 10px;
-  color: #FEBF00;
-}
-
-.inputGroup input:focus ~ .example,
-.inputGroup input:valid ~ .example {
-  opacity: 1;
-  visibility: visible;
-  transform: translateY(-50%) scale(0.9);
-  top: calc(100% + 2px);
-  background: rgba(255, 255, 255, 0.8);
-  backdrop-filter: blur(10px);
-  border-radius: 10px;
-  color: #FEBF00;
-}
-
 /* Ensure proper spacing for input pairs */
 .play-input-pair .inputGroup {
   flex: 1;
