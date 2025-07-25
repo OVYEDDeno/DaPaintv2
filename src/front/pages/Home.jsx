@@ -202,6 +202,7 @@ const Home = () => {
   // Filter functions
   const handleFilterChange = (filterType) => {
     setActiveFilter(filterType);
+    setTranslateX(0); // Reset carousel position when filter changes
   };
 
   const getFilteredMatches = () => {
