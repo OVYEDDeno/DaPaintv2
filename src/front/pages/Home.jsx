@@ -1082,6 +1082,188 @@ const styles = {
   
   navButtonText: {
     fontSize: '12px'
+  },
+
+  // Modal Styles
+  modalOverlay: {
+    position: 'fixed',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    background: 'rgba(0, 0, 0, 0.8)',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    zIndex: 1000,
+    padding: '20px'
+  },
+
+  modalContent: {
+    background: '#23272f',
+    borderRadius: '15px',
+    maxWidth: '500px',
+    width: '100%',
+    maxHeight: '90vh',
+    overflow: 'auto',
+    boxShadow: '0 20px 40px rgba(0, 0, 0, 0.5)'
+  },
+
+  modalHeader: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: '20px 25px',
+    borderBottom: '1px solid #2c3e50'
+  },
+
+  modalTitle: {
+    fontSize: '18px',
+    fontWeight: 'bold',
+    color: '#fff',
+    margin: 0
+  },
+
+  closeButton: {
+    background: 'none',
+    border: 'none',
+    color: '#ccc',
+    fontSize: '20px',
+    cursor: 'pointer',
+    padding: '5px',
+    borderRadius: '50%',
+    width: '30px',
+    height: '30px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+
+  modalForm: {
+    padding: '25px'
+  },
+
+  formRow: {
+    display: 'flex',
+    gap: '15px',
+    marginBottom: '20px'
+  },
+
+  formGroup: {
+    flex: 1,
+    marginBottom: '20px'
+  },
+
+  formLabel: {
+    display: 'block',
+    marginBottom: '8px',
+    color: '#fff',
+    fontSize: '14px',
+    fontWeight: 'bold'
+  },
+
+  formInput: {
+    width: '100%',
+    padding: '12px',
+    border: '1px solid #444',
+    borderRadius: '8px',
+    background: '#1a1a1a',
+    color: '#fff',
+    fontSize: '14px',
+    outline: 'none',
+    boxSizing: 'border-box'
+  },
+
+  formTextarea: {
+    resize: 'vertical',
+    minHeight: '80px'
+  },
+
+  modalActions: {
+    display: 'flex',
+    gap: '15px',
+    justifyContent: 'flex-end',
+    marginTop: '25px',
+    paddingTop: '20px',
+    borderTop: '1px solid #2c3e50'
+  },
+
+  cancelButton: {
+    padding: '12px 24px',
+    border: '1px solid #666',
+    borderRadius: '8px',
+    background: 'transparent',
+    color: '#ccc',
+    cursor: 'pointer',
+    fontSize: '14px',
+    fontWeight: 'bold'
+  },
+
+  submitButton: {
+    padding: '12px 24px',
+    border: 'none',
+    borderRadius: '8px',
+    background: '#FEBF00',
+    color: '#000',
+    cursor: 'pointer',
+    fontSize: '14px',
+    fontWeight: 'bold'
+  },
+
+  confirmButton: {
+    padding: '12px 24px',
+    border: 'none',
+    borderRadius: '8px',
+    background: '#28a745',
+    color: '#fff',
+    cursor: 'pointer',
+    fontSize: '14px',
+    fontWeight: 'bold'
+  },
+
+  // Filter Modal Styles
+  filterContent: {
+    padding: '25px',
+    textAlign: 'center'
+  },
+
+  filterText: {
+    fontSize: '16px',
+    color: '#fff',
+    marginBottom: '10px'
+  },
+
+  filterSubtext: {
+    fontSize: '14px',
+    color: '#ccc'
+  },
+
+  // Lock In Modal Styles
+  lockInContent: {
+    padding: '25px'
+  },
+
+  matchDetails: {
+    marginBottom: '25px'
+  },
+
+  matchDetailRow: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: '12px 0',
+    borderBottom: '1px solid #2c3e50'
+  },
+
+  matchDetailLabel: {
+    fontSize: '14px',
+    color: '#ccc',
+    fontWeight: 'bold'
+  },
+
+  matchDetailValue: {
+    fontSize: '14px',
+    color: '#fff'
   }
 };
 
