@@ -154,6 +154,47 @@ const Home = () => {
     setChatInput("");
   };
 
+  // Modal handlers
+  const handleCreateDaPaint = () => {
+    setShowCreateModal(true);
+  };
+
+  const handleFilterDaPaint = () => {
+    setShowFilterModal(true);
+  };
+
+  const handleLockIn = (match) => {
+    setSelectedMatch(match);
+    setShowLockInModal(true);
+  };
+
+  const handleCreateFormChange = (field, value) => {
+    setCreateForm(prev => ({ ...prev, [field]: value }));
+  };
+
+  const handleCreateSubmit = (e) => {
+    e.preventDefault();
+    // TODO: Submit to API
+    console.log('Creating DaPaint:', createForm);
+    setShowCreateModal(false);
+    setCreateForm({
+      sport: '',
+      location: '',
+      date: '',
+      time: '',
+      ticketPrice: '',
+      maxPlayers: '',
+      description: ''
+    });
+  };
+
+  const closeModals = () => {
+    setShowCreateModal(false);
+    setShowFilterModal(false);
+    setShowLockInModal(false);
+    setSelectedMatch(null);
+  };
+
   return (
     <div style={styles.mainContainer}>
       
