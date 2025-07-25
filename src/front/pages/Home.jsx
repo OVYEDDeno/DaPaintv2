@@ -1314,6 +1314,30 @@ const styles = {
   matchDetailValue: {
     fontSize: '14px',
     color: '#fff'
+  },
+
+  // Active filter button style
+  activeFilterButton: {
+    background: '#FEBF00',
+    color: '#000'
+  },
+
+  // No matches message
+  noMatchesMessage: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '300px',
+    height: '150px',
+    background: '#23272f',
+    borderRadius: '10px',
+    border: '2px dashed #444'
+  },
+
+  noMatchesText: {
+    color: '#ccc',
+    fontSize: '16px',
+    textAlign: 'center'
   }
 };
 
