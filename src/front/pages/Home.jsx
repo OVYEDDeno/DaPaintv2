@@ -72,9 +72,20 @@ const Home = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  // Calculate filtered matches with useMemo for performance
+  const filteredMatches = React.useMemo(() => {
+    switch (activeFilter) {
+      case 'SELLING_TICKETS':
+        return mockMatches.filter(match => match.ticket === true);
+      case 'LOOKING_FOR_FOE':
+        return mockMatches.filter(match => match.ticket === false);
+      default:
+        return mockMatches;
+    }
+  }, [activeFilter]);
+
   // Calculate dimensions for seamless infinite scroll
   const cardWidth = 260 + 12; // card width + gap
-  const filteredMatches = getFilteredMatches();
   const totalCards = filteredMatches.length;
   const singleSetWidth = totalCards * cardWidth;
 
