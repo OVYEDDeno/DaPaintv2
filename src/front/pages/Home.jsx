@@ -216,16 +216,7 @@ const Home = () => {
     setTranslateX(0); // Reset carousel position when filter changes
   };
 
-  const getFilteredMatches = () => {
-    switch (activeFilter) {
-      case 'SELLING_TICKETS':
-        return mockMatches.filter(match => match.ticket === true);
-      case 'LOOKING_FOR_FOE':
-        return mockMatches.filter(match => match.ticket === false);
-      default:
-        return mockMatches;
-    }
-  };
+
 
   return (
     <div style={styles.mainContainer}>
