@@ -198,6 +198,22 @@ const Home = () => {
     setSelectedMatch(null);
   };
 
+  // Filter functions
+  const handleFilterChange = (filterType) => {
+    setActiveFilter(filterType);
+  };
+
+  const getFilteredMatches = () => {
+    switch (activeFilter) {
+      case 'SELLING_TICKETS':
+        return mockMatches.filter(match => match.ticket === true);
+      case 'LOOKING_FOR_FOE':
+        return mockMatches.filter(match => match.ticket === false);
+      default:
+        return mockMatches;
+    }
+  };
+
   return (
     <div style={styles.mainContainer}>
       
