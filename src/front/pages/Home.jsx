@@ -18,7 +18,7 @@ const mockMatches = [
 ];
 
 const mockChat = [
-  { id: 1, user: "Morgan", text: "Who's ready for tomorrow's boxing event? 🥊" },
+  { id: 1, user: "Morgan", text: "Who's ready for tomorrow's boxing event? ���" },
   { id: 2, user: "Jordan", text: "Just locked in for the downtown showdown! 🔥" },
   { id: 3, user: "Rick Craig", text: "lets goo" },
   { id: 4, user: "Rick Craig", text: "omg" },
@@ -74,7 +74,8 @@ const Home = () => {
 
   // Calculate dimensions for seamless infinite scroll
   const cardWidth = 260 + 12; // card width + gap
-  const totalCards = mockMatches.length;
+  const filteredMatches = getFilteredMatches();
+  const totalCards = filteredMatches.length;
   const singleSetWidth = totalCards * cardWidth;
 
   // Perfect orbital animation - like Earth rotating
@@ -496,7 +497,7 @@ const Home = () => {
                     <option value="🎾">🎾 Tennis</option>
                     <option value="🥊">🥊 Boxing</option>
                     <option value="🏓">🏓 Ping Pong</option>
-                    <option value="🛹">🛹 Skateboarding</option>
+                    <option value="🛹">���� Skateboarding</option>
                   </select>
                 </div>
                 <div style={styles.formGroup}>
