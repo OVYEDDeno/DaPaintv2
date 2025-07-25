@@ -289,55 +289,61 @@ const Home = () => {
           >
             
             {/* Duplicate sets for seamless infinite orbital loop */}
-            {[...mockMatches, ...mockMatches].map((m, i) => {
-              const originalIndex = i % mockMatches.length;
-              const hostAvatar = "https://randomuser.me/api/portraits/men/" + ((originalIndex % 5) + 1) + ".jpg";
-              const foeAvatar = "https://randomuser.me/api/portraits/women/" + ((originalIndex % 5) + 1) + ".jpg";
-              const isVS = m.ticket;
-              
-              return (
-                <div key={`${m.id}-${i}`} style={styles.individualMatchCard}>
-                  
-                  <div style={{
-                    ...styles.matchCardHeader,
-                    gap: isVS ? '8px' : '0'
-                  }}>
-                    <img style={styles.hostAvatar} src={hostAvatar} alt="Host" />
-                    {isVS && <span style={styles.vsText}>vs</span>}
-                    {isVS && <img style={styles.foeAvatar} src={foeAvatar} alt="Foe" />}
-                    <span style={styles.matchDateTime}>{m.date} {m.time}</span>
+            {filteredMatches.length > 0 ? (
+              [...filteredMatches, ...filteredMatches].map((m, i) => {
+                const originalIndex = i % filteredMatches.length;
+                const hostAvatar = "https://randomuser.me/api/portraits/men/" + ((originalIndex % 5) + 1) + ".jpg";
+                const foeAvatar = "https://randomuser.me/api/portraits/women/" + ((originalIndex % 5) + 1) + ".jpg";
+                const isVS = m.ticket;
+
+                return (
+                  <div key={`${m.id}-${i}`} style={styles.individualMatchCard}>
+
+                    <div style={{
+                      ...styles.matchCardHeader,
+                      gap: isVS ? '8px' : '0'
+                    }}>
+                      <img style={styles.hostAvatar} src={hostAvatar} alt="Host" />
+                      {isVS && <span style={styles.vsText}>vs</span>}
+                      {isVS && <img style={styles.foeAvatar} src={foeAvatar} alt="Foe" />}
+                      <span style={styles.matchDateTime}>{m.date} {m.time}</span>
+                    </div>
+
+                    <div style={styles.matchCardDetails}>
+                      <span style={styles.sportIcon}>{m.sport}</span>
+                      <span style={styles.locationName}>{m.title}</span>
+                    </div>
+
+                    {isVS ? (
+                      <button
+                        style={{
+                          ...styles.ticketButton,
+                          opacity: isDragging ? 0.7 : 1,
+                          pointerEvents: isDragging ? 'none' : 'auto'
+                        }}
+                      >
+                        🎟️ ${m.price}
+                      </button>
+                    ) : (
+                      <button
+                        style={{
+                          ...styles.lockInButton,
+                          opacity: isDragging ? 0.7 : 1,
+                          pointerEvents: isDragging ? 'none' : 'auto'
+                        }}
+                        onClick={() => handleLockIn(m)}
+                      >
+                        Lock In DaPaint
+                      </button>
+                    )}
                   </div>
-                  
-                  <div style={styles.matchCardDetails}>
-                    <span style={styles.sportIcon}>{m.sport}</span>
-                    <span style={styles.locationName}>{m.title}</span>
-                  </div>
-                  
-                  {isVS ? (
-                    <button 
-                      style={{
-                        ...styles.ticketButton,
-                        opacity: isDragging ? 0.7 : 1,
-                        pointerEvents: isDragging ? 'none' : 'auto'
-                      }}
-                    >
-                      🎟️ ${m.price}
-                    </button>
-                  ) : (
-                    <button
-                      style={{
-                        ...styles.lockInButton,
-                        opacity: isDragging ? 0.7 : 1,
-                        pointerEvents: isDragging ? 'none' : 'auto'
-                      }}
-                      onClick={() => handleLockIn(m)}
-                    >
-                      Lock In DaPaint
-                    </button>
-                  )}
-                </div>
-              );
-            })}
+                );
+              })
+            ) : (
+              <div style={styles.noMatchesMessage}>
+                <p style={styles.noMatchesText}>No matches found for this filter.</p>
+              </div>
+            )}
           </div>
         </div>
       </div>
