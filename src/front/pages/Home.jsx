@@ -43,6 +43,23 @@ const Home = () => {
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   const [activeTab, setActiveTab] = useState('chat'); // 'chat' or 'leaderboard'
 
+  // Modal states
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [showFilterModal, setShowFilterModal] = useState(false);
+  const [showLockInModal, setShowLockInModal] = useState(false);
+  const [selectedMatch, setSelectedMatch] = useState(null);
+
+  // Create DaPaint form state
+  const [createForm, setCreateForm] = useState({
+    sport: '',
+    location: '',
+    date: '',
+    time: '',
+    ticketPrice: '',
+    maxPlayers: '',
+    description: ''
+  });
+
   // Handle window resize
   useEffect(() => {
     const handleResize = () => {
