@@ -205,8 +205,8 @@ const Home = () => {
           
           {/* Left group */}
           <div style={styles.leftButtonGroup}>
-            <button style={styles.filterButton}>🪠Filter DaPaint</button>
-            <button style={styles.createButton}>➕Create A DaPaint</button>
+            <button style={styles.filterButton} onClick={handleFilterDaPaint}>🪠Filter DaPaint</button>
+            <button style={styles.createButton} onClick={handleCreateDaPaint}>➕Create A DaPaint</button>
           </div>
           
           {/* Right group */}
