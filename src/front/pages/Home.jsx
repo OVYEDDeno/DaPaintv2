@@ -277,15 +277,16 @@ const Home = () => {
                         pointerEvents: isDragging ? 'none' : 'auto'
                       }}
                     >
-                      🎟️ ${m.price}
+                      🎟��� ${m.price}
                     </button>
                   ) : (
-                    <button 
+                    <button
                       style={{
                         ...styles.lockInButton,
                         opacity: isDragging ? 0.7 : 1,
                         pointerEvents: isDragging ? 'none' : 'auto'
                       }}
+                      onClick={() => handleLockIn(m)}
                     >
                       Lock In DaPaint
                     </button>
