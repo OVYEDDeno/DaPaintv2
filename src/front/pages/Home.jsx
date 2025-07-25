@@ -277,7 +277,7 @@ const Home = () => {
                         pointerEvents: isDragging ? 'none' : 'auto'
                       }}
                     >
-                      🎟��� ${m.price}
+                      🎟️ ${m.price}
                     </button>
                   ) : (
                     <button
@@ -427,6 +427,180 @@ const Home = () => {
           <span style={styles.navButtonText}>Profile</span>
         </button>
       </nav>
+
+      {/* Create DaPaint Modal */}
+      {showCreateModal && (
+        <div style={styles.modalOverlay} onClick={closeModals}>
+          <div style={styles.modalContent} onClick={(e) => e.stopPropagation()}>
+            <div style={styles.modalHeader}>
+              <h2 style={styles.modalTitle}>🏆 Create A DaPaint</h2>
+              <button style={styles.closeButton} onClick={closeModals}>✕</button>
+            </div>
+            <form style={styles.modalForm} onSubmit={handleCreateSubmit}>
+              <div style={styles.formRow}>
+                <div style={styles.formGroup}>
+                  <label style={styles.formLabel}>Sport</label>
+                  <select
+                    style={styles.formInput}
+                    value={createForm.sport}
+                    onChange={(e) => handleCreateFormChange('sport', e.target.value)}
+                    required
+                  >
+                    <option value="">Select Sport</option>
+                    <option value="⚽">⚽ Soccer</option>
+                    <option value="🏀">🏀 Basketball</option>
+                    <option value="🏈">🏈 Football</option>
+                    <option value="🎾">🎾 Tennis</option>
+                    <option value="🥊">🥊 Boxing</option>
+                    <option value="🏓">🏓 Ping Pong</option>
+                    <option value="🛹">🛹 Skateboarding</option>
+                  </select>
+                </div>
+                <div style={styles.formGroup}>
+                  <label style={styles.formLabel}>Max Players</label>
+                  <input
+                    style={styles.formInput}
+                    type="number"
+                    value={createForm.maxPlayers}
+                    onChange={(e) => handleCreateFormChange('maxPlayers', e.target.value)}
+                    placeholder="e.g. 10"
+                    min="2"
+                    max="100"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div style={styles.formGroup}>
+                <label style={styles.formLabel}>Location</label>
+                <input
+                  style={styles.formInput}
+                  type="text"
+                  value={createForm.location}
+                  onChange={(e) => handleCreateFormChange('location', e.target.value)}
+                  placeholder="e.g. Central Park Basketball Court"
+                  required
+                />
+              </div>
+
+              <div style={styles.formRow}>
+                <div style={styles.formGroup}>
+                  <label style={styles.formLabel}>Date</label>
+                  <input
+                    style={styles.formInput}
+                    type="date"
+                    value={createForm.date}
+                    onChange={(e) => handleCreateFormChange('date', e.target.value)}
+                    required
+                  />
+                </div>
+                <div style={styles.formGroup}>
+                  <label style={styles.formLabel}>Time</label>
+                  <input
+                    style={styles.formInput}
+                    type="time"
+                    value={createForm.time}
+                    onChange={(e) => handleCreateFormChange('time', e.target.value)}
+                    required
+                  />
+                </div>
+              </div>
+
+              <div style={styles.formGroup}>
+                <label style={styles.formLabel}>Ticket Price ($)</label>
+                <input
+                  style={styles.formInput}
+                  type="number"
+                  value={createForm.ticketPrice}
+                  onChange={(e) => handleCreateFormChange('ticketPrice', e.target.value)}
+                  placeholder="e.g. 25"
+                  min="1"
+                  step="0.01"
+                  required
+                />
+              </div>
+
+              <div style={styles.formGroup}>
+                <label style={styles.formLabel}>Description (Optional)</label>
+                <textarea
+                  style={{...styles.formInput, ...styles.formTextarea}}
+                  value={createForm.description}
+                  onChange={(e) => handleCreateFormChange('description', e.target.value)}
+                  placeholder="Add any additional details about your DaPaint..."
+                  rows="3"
+                />
+              </div>
+
+              <div style={styles.modalActions}>
+                <button type="button" style={styles.cancelButton} onClick={closeModals}>
+                  Cancel
+                </button>
+                <button type="submit" style={styles.submitButton}>
+                  🚀 Create DaPaint
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Filter Modal */}
+      {showFilterModal && (
+        <div style={styles.modalOverlay} onClick={closeModals}>
+          <div style={styles.modalContent} onClick={(e) => e.stopPropagation()}>
+            <div style={styles.modalHeader}>
+              <h2 style={styles.modalTitle}>🪠 Filter DaPaint</h2>
+              <button style={styles.closeButton} onClick={closeModals}>✕</button>
+            </div>
+            <div style={styles.filterContent}>
+              <p style={styles.filterText}>Filter options coming soon!</p>
+              <p style={styles.filterSubtext}>You'll be able to filter by sport, location, price range, and date.</p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Lock In Confirmation Modal */}
+      {showLockInModal && selectedMatch && (
+        <div style={styles.modalOverlay} onClick={closeModals}>
+          <div style={styles.modalContent} onClick={(e) => e.stopPropagation()}>
+            <div style={styles.modalHeader}>
+              <h2 style={styles.modalTitle}>🔒 Lock In DaPaint</h2>
+              <button style={styles.closeButton} onClick={closeModals}>✕</button>
+            </div>
+            <div style={styles.lockInContent}>
+              <div style={styles.matchDetails}>
+                <div style={styles.matchDetailRow}>
+                  <span style={styles.matchDetailLabel}>Sport:</span>
+                  <span style={styles.matchDetailValue}>{selectedMatch.sport}</span>
+                </div>
+                <div style={styles.matchDetailRow}>
+                  <span style={styles.matchDetailLabel}>Location:</span>
+                  <span style={styles.matchDetailValue}>{selectedMatch.title}</span>
+                </div>
+                <div style={styles.matchDetailRow}>
+                  <span style={styles.matchDetailLabel}>Date & Time:</span>
+                  <span style={styles.matchDetailValue}>{selectedMatch.date} at {selectedMatch.time}</span>
+                </div>
+                {selectedMatch.price && (
+                  <div style={styles.matchDetailRow}>
+                    <span style={styles.matchDetailLabel}>Entry Fee:</span>
+                    <span style={styles.matchDetailValue}>${selectedMatch.price}</span>
+                  </div>
+                )}
+              </div>
+              <div style={styles.modalActions}>
+                <button type="button" style={styles.cancelButton} onClick={closeModals}>
+                  Cancel
+                </button>
+                <button type="button" style={styles.confirmButton}>
+                  ✅ Confirm Lock In
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
