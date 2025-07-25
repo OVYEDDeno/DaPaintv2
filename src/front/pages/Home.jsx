@@ -81,33 +81,33 @@ const Home = () => {
   // Perfect orbital animation - like Earth rotating
   useEffect(() => {
     let animationId;
-    
+
     const animate = () => {
-      if (!isHovered && !isDragging) {
+      if (!isHovered && !isDragging && filteredMatches.length > 0) {
         setTranslateX(prev => {
           // Smooth continuous movement
           let newTranslate = prev - 0.8; // Constant orbital speed
-          
+
           // Seamless loop when we complete one full orbit
           if (Math.abs(newTranslate) >= singleSetWidth) {
             return 0; // Reset to start position for perfect loop
           }
-          
+
           return newTranslate;
         });
       }
-      
+
       animationId = requestAnimationFrame(animate);
     };
-    
+
     animationId = requestAnimationFrame(animate);
-    
+
     return () => {
       if (animationId) {
         cancelAnimationFrame(animationId);
       }
     };
-  }, [isHovered, isDragging, singleSetWidth]);
+  }, [isHovered, isDragging, singleSetWidth, filteredMatches.length]);
 
   // Mouse and touch event handlers
   const handleMouseEnter = () => setIsHovered(true);
