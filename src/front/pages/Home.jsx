@@ -230,9 +230,33 @@ const Home = () => {
           
           {/* Right group */}
           <div style={styles.rightButtonGroup}>
-            <button style={styles.allButton}>🏁ALL</button>
-            <button style={styles.foeButton}>💢Looking For Foe</button>
-            <button style={styles.ticketsButton}>🎟️Selling Tickets</button>
+            <button
+              style={{
+                ...styles.allButton,
+                ...(activeFilter === 'ALL' ? styles.activeFilterButton : {})
+              }}
+              onClick={() => handleFilterChange('ALL')}
+            >
+              🏁ALL
+            </button>
+            <button
+              style={{
+                ...styles.foeButton,
+                ...(activeFilter === 'LOOKING_FOR_FOE' ? styles.activeFilterButton : {})
+              }}
+              onClick={() => handleFilterChange('LOOKING_FOR_FOE')}
+            >
+              💢Looking For Foe
+            </button>
+            <button
+              style={{
+                ...styles.ticketsButton,
+                ...(activeFilter === 'SELLING_TICKETS' ? styles.activeFilterButton : {})
+              }}
+              onClick={() => handleFilterChange('SELLING_TICKETS')}
+            >
+              🎟️Selling Tickets
+            </button>
           </div>
         </div>
         
