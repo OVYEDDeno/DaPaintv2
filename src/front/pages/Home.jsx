@@ -49,6 +49,9 @@ const Home = () => {
   const [showLockInModal, setShowLockInModal] = useState(false);
   const [selectedMatch, setSelectedMatch] = useState(null);
 
+  // Filter state
+  const [activeFilter, setActiveFilter] = useState('ALL'); // 'ALL', 'SELLING_TICKETS', 'LOOKING_FOR_FOE'
+
   // Create DaPaint form state
   const [createForm, setCreateForm] = useState({
     sport: '',
